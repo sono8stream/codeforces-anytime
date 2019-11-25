@@ -1,0 +1,10 @@
+{
+    "recommendations": [
+        "formulahendry.auto-close-tag",
+        "dsznajder.es7-react-js-snippets",
+        "esbenp.prettier-vscode",
+        "burkeholland.simple-react-snippets",
+        "eg2.tslint",
+        "infeng.vscode-react-typescript"
+    ]
+}
