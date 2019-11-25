@@ -15,6 +15,9 @@ const Contact = () => {
       <p>
         <a href="https://twitter.com/_sono_8_">@_sono_8_</a>
       </p>
+      <Header as="h3">
+        <a href="https://github.com/sono8stream/codeforces-anytime">Github repository</a>
+      </Header>
     </>
   );
 };
