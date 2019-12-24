@@ -72,15 +72,18 @@ export const updateContestRecords = (
     .doc(userID);
   try {
     const contests = await getParticipateVirtuals(handle, lastUpdateTime);
+    const nowTime = Math.floor(new Date().getTime() / 1000);
+    let updateTime = lastUpdateTime;
     for (const contest of contests) {
       if (contest.id < 670) {
         continue;
       }
       try {
-        const { contestName, myRank } = await calculateVirtualRank({
+        const { contestName, myRank, endTime } = await calculateVirtualRank({
           contestID: contest.id,
           handle,
           startTime: contest.startTimeSeconds,
+          nowTime,
         });
         const oldRating = getState().profileReducer.rating;
         const nextRating = await calculateMyRating({
@@ -110,15 +113,15 @@ export const updateContestRecords = (
           { merge: true }
         );
         dispatch(addContestRecordAction(newRecord));
+        updateTime = Math.max(updateTime, endTime);
       } catch (e) {
         continue;
       }
     }
-    const nowTime = Math.floor(new Date().getTime() / 1000);
     try {
       await storeRef.set(
         {
-          lastUpdateTime: nowTime,
+          lastUpdateTime: updateTime,
         },
         { merge: true }
       );
@@ -126,7 +129,7 @@ export const updateContestRecords = (
     dispatch(
       updateContestRecordsActions.done({
         params: true,
-        result: { lastUpdateTime: nowTime },
+        result: { lastUpdateTime: updateTime },
       })
     );
     if (onDone) {

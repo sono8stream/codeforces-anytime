@@ -1,5 +1,5 @@
 interface Result {
-  contest: { name: string };
+  contest: { name: string; durationSeconds: number };
   rows: Array<{
     party: {
       members: Array<{ handle: string }>;
@@ -15,8 +15,9 @@ export const calculateVirtualRank = async (data: {
   contestID: number;
   handle: string;
   startTime: number;
-}): Promise<{ contestName: string; myRank: number }> => {
-  const { contestID, startTime } = data;
+  nowTime: number;
+}): Promise<{ contestName: string; myRank: number; endTime: number }> => {
+  const { contestID, handle, startTime, nowTime } = data;
   const url = `https://codeforces.com/api/contest.standings?contestId=${contestID}&showUnofficial=true`;
   try {
     const response = await fetch(url).catch((err) => null);
@@ -26,6 +27,10 @@ export const calculateVirtualRank = async (data: {
     const json = await response.json();
     const result = json.result as Result;
     const contestName = result.contest.name;
+    const durationSeconds = result.contest.durationSeconds;
+    if (startTime + durationSeconds > nowTime) {
+      throw new Error('Not finished');
+    }
     let myRank = 0;
     let cnt = 0;
     let assignedRank = 0;
@@ -36,8 +41,7 @@ export const calculateVirtualRank = async (data: {
       }
       const party = user.party;
       const members = party.members;
-      const isMe =
-        members.find((item) => item.handle === data.handle) !== undefined;
+      const isMe = members.find((item) => item.handle === handle) !== undefined;
       if (isMe && party.startTimeSeconds !== startTime) {
         continue;
       }
@@ -57,7 +61,7 @@ export const calculateVirtualRank = async (data: {
         break;
       }
     }
-    return { contestName, myRank };
+    return { contestName, myRank, endTime: startTime + durationSeconds };
   } catch (e) {
     throw e;
   }
