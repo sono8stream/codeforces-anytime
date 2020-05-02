@@ -3,8 +3,14 @@ import * as functions from 'firebase-functions';
 import fetch from 'node-fetch';
 import UncheckedContests from './types/uncheckedContests';
 
-interface CheckedContets {
-  contests: { [key: number]: string }[];
+interface CheckedContests {
+  contests: ContestInfo[];
+}
+
+interface ContestInfo {
+  id: number;
+  name: string;
+  durationSeconds: number;
 }
 
 interface RatingChangesResponse {
@@ -18,14 +24,22 @@ interface RatingChange {
 }
 
 export const checkContest = functions.pubsub
-  .schedule('every day 09:00')
+  .schedule('every day 10:00')
   .onRun(async (context) => {
     const collection = admin.firestore().collection('availableContests');
     const uncheckedDoc = collection.doc('uncheckedContests');
     const uncheckedContests = (
       await uncheckedDoc.get()
     ).data() as UncheckedContests;
+    const checkedDoc = collection.doc('checkedContests');
+    const checkedContests = (await checkedDoc.get()).data() as CheckedContests;
+    const contestListResponse = await fetch(
+      'https://codeforces.com/api/contest.list'
+    );
+    const contestListJson = await contestListResponse.json();
+    const contestList = contestListJson.result as ContestInfo[];
     const contestIDs = uncheckedContests.contestIDs;
+
     const fetchUnit = 5;
     let fetchCnt = 0;
     while (contestIDs.length > 0 && fetchCnt < fetchUnit) {
@@ -33,20 +47,28 @@ export const checkContest = functions.pubsub
       contestIDs.pop();
       const contestName = await validateContestName(contestID);
       if (contestName) {
-        const checkedDoc = collection.doc('checkedContests');
-        const checkedContests = (
-          await checkedDoc.get()
-        ).data() as CheckedContets;
-        await checkedDoc.update({
-          contests: [
-            ...checkedContests.contests,
-            { id: contestID, name: contestName },
-          ],
+        let durationSeconds = 0;
+        for (const contestInfo of contestList) {
+          if (contestInfo.id === contestID) {
+            durationSeconds = contestInfo.durationSeconds;
+          }
+        }
+
+        checkedContests.contests.push({
+          id: contestID,
+          name: contestName,
+          durationSeconds,
         });
         fetchCnt++;
       }
     }
-    await uncheckedDoc.update({ contestIDs });
+
+    const batch = admin.firestore().batch();
+    batch.update(checkedDoc, {
+      contests: checkedContests.contests,
+    });
+    batch.update(uncheckedDoc, { contestIDs });
+    await batch.commit();
     return null;
   });
 
