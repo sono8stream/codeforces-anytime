@@ -4,7 +4,7 @@ import fetch from 'node-fetch';
 import UncheckedContests from './types/uncheckedContests';
 
 interface CheckedContets {
-  contests: Array<{ [key: number]: string }>;
+  contests: { [key: number]: string }[];
 }
 
 interface RatingChangesResponse {
@@ -22,9 +22,11 @@ export const checkContest = functions.pubsub
   .onRun(async (context) => {
     const collection = admin.firestore().collection('availableContests');
     const uncheckedDoc = collection.doc('uncheckedContests');
-    const uncheckedContests = (await uncheckedDoc.get()).data() as UncheckedContests;
+    const uncheckedContests = (
+      await uncheckedDoc.get()
+    ).data() as UncheckedContests;
     const contestIDs = uncheckedContests.contestIDs;
-    const fetchUnit = 3;
+    const fetchUnit = 5;
     let fetchCnt = 0;
     while (contestIDs.length > 0 && fetchCnt < fetchUnit) {
       const contestID = contestIDs[contestIDs.length - 1];
@@ -32,7 +34,9 @@ export const checkContest = functions.pubsub
       const contestName = await validateContestName(contestID);
       if (contestName) {
         const checkedDoc = collection.doc('checkedContests');
-        const checkedContests = (await checkedDoc.get()).data() as CheckedContets;
+        const checkedContests = (
+          await checkedDoc.get()
+        ).data() as CheckedContets;
         await checkedDoc.update({
           contests: [...checkedContests.contests, { [contestID]: contestName }],
         });

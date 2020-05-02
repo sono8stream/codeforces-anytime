@@ -25,7 +25,7 @@ export const addContestList = functions.pubsub
     const data = snapshot.data() as UncheckedContests;
     const lastUpdateTime = data.lastUpdateTime;
     const contests = await fetchContestList();
-    const contestIDs = getAddableContests(contests, lastUpdateTime);
+    const contestIDs = filterAddableContests(contests, lastUpdateTime);
     const updateTime = Math.floor(new Date().getTime() / 1000);
     await doc.update({
       contestIDs: [...data.contestIDs, ...contestIDs],
@@ -41,7 +41,7 @@ const fetchContestList = async () => {
   return contestListResponse.result;
 };
 
-const getAddableContests = (
+const filterAddableContests = (
   contests: ContestData[],
   lastUpdateTime: number
 ) => {
