@@ -9,6 +9,9 @@ import UserProfile from '../types/userProfile';
 import { calculateMyRating } from '../utils/calculateMyRating';
 import { calculateVirtualRank } from '../utils/calculateVirtualRank';
 import { getParticipateVirtuals } from '../utils/getParticipateVirtuals';
+import AvailableContestInfo from '../types/availableContestInfo';
+import { fetchAvailableContestInfoAPI } from '../api/availableContestInfo';
+import { fetchOfficialRatingRecordsAPI } from '../api/fetchOfficialRatingRecords';
 
 const actionCreator = actionCreatorFactory();
 
@@ -28,10 +31,7 @@ export const updateProfile = (
     onStart();
   }
   try {
-    const storeRef = firebase
-      .firestore()
-      .collection('users')
-      .doc(userID);
+    const storeRef = firebase.firestore().collection('users').doc(userID);
     await storeRef.set(profile, { merge: true });
     updateProfileActions.done({ params: {}, result: profile });
     if (onDone) {
@@ -64,12 +64,9 @@ export const updateContestRecords = (
   if (onStart) {
     onStart();
   }
-  const userID = getState().accountReducer.id;
-  const { handle, lastUpdateTime } = getState().profileReducer;
-  const storeRef = firebase
-    .firestore()
-    .collection('users')
-    .doc(userID);
+  const userID = getState().account.id;
+  const { handle, lastUpdateTime } = getState().profile;
+  const storeRef = firebase.firestore().collection('users').doc(userID);
   try {
     const contests = await getParticipateVirtuals(handle, lastUpdateTime);
     const nowTime = Math.floor(new Date().getTime() / 1000);
@@ -85,7 +82,7 @@ export const updateContestRecords = (
           startTime: contest.startTimeSeconds,
           nowTime,
         });
-        const oldRating = getState().profileReducer.rating;
+        const oldRating = getState().profile.rating;
         const nextRating = await calculateMyRating({
           contestID: contest.id,
           handle,
@@ -108,7 +105,7 @@ export const updateContestRecords = (
         await storeRef.set(
           {
             rating: nextRating,
-            records: [newRecord, ...getState().profileReducer.records],
+            records: [newRecord, ...getState().profile.records],
           },
           { merge: true }
         );
@@ -231,5 +228,63 @@ export const fetchProfile = (
     if (onFailed) {
       onFailed();
     }
+  }
+};
+
+export const fetchAvailableContestInfoActions = actionCreator.async<
+  {},
+  AvailableContestInfo[],
+  { error: Error }
+>('FetchAvailableContestInfo');
+
+export const fetchAvailableContestInfo = () => async (dispatch: Dispatch) => {
+  dispatch(fetchAvailableContestInfoActions.started({}));
+  try {
+    const contestInfoList = await fetchAvailableContestInfoAPI();
+
+    if (contestInfoList) {
+      dispatch(
+        fetchAvailableContestInfoActions.done({
+          params: {},
+          result: contestInfoList,
+        })
+      );
+    } else {
+      throw new Error('Cannot fetch');
+    }
+  } catch (error) {
+    dispatch(
+      fetchAvailableContestInfoActions.failed({ params: {}, error: { error } })
+    );
+  }
+};
+
+export const fetchOfficialRatingRecordsActions = actionCreator.async<
+  {},
+  ContestRecord[],
+  { error: Error }
+>('FetchOfficialRatingInfo');
+
+export const fetchOfficialRatingRecords = (handle: string) => async (
+  dispatch: Dispatch
+) => {
+  dispatch(fetchOfficialRatingRecordsActions.started({}));
+  try {
+    const officialRatingRecords = await fetchOfficialRatingRecordsAPI(handle);
+
+    if (officialRatingRecords) {
+      dispatch(
+        fetchOfficialRatingRecordsActions.done({
+          params: {},
+          result: officialRatingRecords,
+        })
+      );
+    } else {
+      throw new Error('Cannot fetch');
+    }
+  } catch (error) {
+    dispatch(
+      fetchOfficialRatingRecordsActions.failed({ params: {}, error: { error } })
+    );
   }
 };
