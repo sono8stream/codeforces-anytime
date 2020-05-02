@@ -11,6 +11,7 @@ interface ContestInfo {
   id: number;
   name: string;
   durationSeconds: number;
+  startTimeSeconds: number;
 }
 
 interface RatingChangesResponse {
@@ -48,9 +49,11 @@ export const checkContest = functions.pubsub
       const contestName = await validateContestName(contestID);
       if (contestName) {
         let durationSeconds = 0;
+        let startTimeSeconds = 0;
         for (const contestInfo of contestList) {
           if (contestInfo.id === contestID) {
             durationSeconds = contestInfo.durationSeconds;
+            startTimeSeconds = contestInfo.startTimeSeconds;
           }
         }
 
@@ -58,6 +61,7 @@ export const checkContest = functions.pubsub
           id: contestID,
           name: contestName,
           durationSeconds,
+          startTimeSeconds,
         });
         fetchCnt++;
       }
