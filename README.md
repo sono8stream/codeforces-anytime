@@ -1,6 +1,6 @@
 ## About
 
- Codeforces Anytime repository created by sono.
+Codeforces Anytime repository created by sono.
 This application uses firebase for DB and hosting.
 
 ## How to setup
@@ -44,6 +44,7 @@ $ npm i -g firebase-tools
 $ firebase login
 $ firebase init
 ```
+
 ### Debug
 
 In your cloned directory, run below.
@@ -52,11 +53,12 @@ In your cloned directory, run below.
 $ npm i
 $ npm start
 ```
+
 Open http://localhost:3000
 
 ## How to update dependencies
 
 ```
 $ npx npm-check-updates -u
-$ npm update
+$ npm install
 ```
