@@ -38,7 +38,10 @@ export const checkContest = functions.pubsub
           await checkedDoc.get()
         ).data() as CheckedContets;
         await checkedDoc.update({
-          contests: [...checkedContests.contests, { [contestID]: contestName }],
+          contests: [
+            ...checkedContests.contests,
+            { id: contestID, name: contestName },
+          ],
         });
         fetchCnt++;
       }
