@@ -75,7 +75,7 @@ const ProfilePage: React.FC = () => {
   );
 
   return (
-    <div>
+    <>
       <Header as="h2" style={getRatingColorStyle(profile.rating)}>
         {profile.handle}
       </Header>
@@ -173,7 +173,7 @@ const ProfilePage: React.FC = () => {
           })}
         </Table.Body>
       </Table>
-    </div>
+    </>
   );
 };
 
