@@ -102,6 +102,8 @@ export const updateContestRecords = (
           oldRating,
         };
 
+        updateTime = Math.max(updateTime, endTime);
+
         const doc = await storeRef.get();
         if (updateTime > doc.data()?.lastUpdateTime) {
           await storeRef.set(
@@ -112,9 +114,8 @@ export const updateContestRecords = (
             },
             { merge: true }
           );
+          dispatch(addContestRecordAction(newRecord));
         }
-        dispatch(addContestRecordAction(newRecord));
-        updateTime = Math.max(updateTime, endTime);
       } catch (e) {
         continue;
       }
