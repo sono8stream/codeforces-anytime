@@ -116,12 +116,15 @@ export const updateContestRecords = (
       }
     }
     try {
-      await storeRef.set(
-        {
-          lastUpdateTime: updateTime,
-        },
-        { merge: true }
-      );
+      const doc = await storeRef.get();
+      if (updateTime > doc.data()?.lastUpdateTime) {
+        await storeRef.set(
+          {
+            lastUpdateTime: updateTime,
+          },
+          { merge: true }
+        );
+      }
     } catch (e) {}
     dispatch(
       updateContestRecordsActions.done({
