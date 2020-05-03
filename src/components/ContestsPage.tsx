@@ -48,7 +48,7 @@ const ContestsPage: React.FC = () => {
 
   return (
     <>
-      <Header as="h2" content="コンテスト一覧" />
+      <Header as="h2" content="対応中のコンテスト" />
       <Table celled={true}>
         <Table.Header>
           <Table.Row>
