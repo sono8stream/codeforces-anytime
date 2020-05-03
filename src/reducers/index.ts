@@ -55,6 +55,11 @@ const officialRatingRecordsReducer = reducerWithInitialState<ContestRecord[]>(
   (prev, payload) => payload.result
 );
 
+const isUpdatingRatingReducer = reducerWithInitialState<boolean>(false)
+  .case(updateContestRecordsActions.started, () => true)
+  .case(updateContestRecordsActions.done, () => false)
+  .case(updateContestRecordsActions.failed, () => false);
+
 const accountReducer = reducerWithInitialState<AccountInfo>({
   email: '',
   id: '',
@@ -70,6 +75,7 @@ const rootReducer = combineReducers<RootState>({
   profile: profileReducer,
   availableContests: availableContestsResucer,
   officialRatingRecords: officialRatingRecordsReducer,
+  isUpdatingRating: isUpdatingRatingReducer,
   account: accountReducer,
 });
 

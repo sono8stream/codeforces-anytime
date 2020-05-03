@@ -7,5 +7,6 @@ export default interface RootState {
   profile: UserProfile;
   availableContests: AvailableContestInfo[];
   officialRatingRecords: ContestRecord[];
+  isUpdatingRating: boolean;
   account: AccountInfo;
 }

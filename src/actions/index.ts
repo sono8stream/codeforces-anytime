@@ -102,13 +102,17 @@ export const updateContestRecords = (
           oldRating,
         };
 
-        await storeRef.set(
-          {
-            rating: nextRating,
-            records: [newRecord, ...getState().profile.records],
-          },
-          { merge: true }
-        );
+        const doc = await storeRef.get();
+        if (updateTime > doc.data()?.lastUpdateTime) {
+          await storeRef.set(
+            {
+              lastUpdateTime: updateTime,
+              rating: nextRating,
+              records: [newRecord, ...getState().profile.records],
+            },
+            { merge: true }
+          );
+        }
         dispatch(addContestRecordAction(newRecord));
         updateTime = Math.max(updateTime, endTime);
       } catch (e) {
@@ -116,15 +120,6 @@ export const updateContestRecords = (
       }
     }
     try {
-      const doc = await storeRef.get();
-      if (updateTime > doc.data()?.lastUpdateTime) {
-        await storeRef.set(
-          {
-            lastUpdateTime: updateTime,
-          },
-          { merge: true }
-        );
-      }
     } catch (e) {}
     dispatch(
       updateContestRecordsActions.done({

@@ -13,7 +13,7 @@ import {
 import { Button, Header, Loader, Segment, Table } from 'semantic-ui-react';
 import { fetchProfile, updateContestRecords } from '../actions';
 import history from '../history';
-import { useAccountInfo, useProfile } from '../hooks';
+import { useAccountInfo, useProfile, useIsUpdatingRating } from '../hooks';
 import { dateStringFromSeconds } from '../utils/dateString';
 import { monthStringFromTime } from '../utils/dateString';
 import getRatingColorStyle, {
@@ -25,7 +25,7 @@ const ProfilePage: React.FC = () => {
   const dispatch = useDispatch();
   const account = useAccountInfo();
   const profile = useProfile();
-  const [isUpdating, setIsUpdating] = useState(false);
+  const isUpdatingRating = useIsUpdatingRating();
 
   useEffect(() => {
     if (!account.id) {
@@ -35,13 +35,9 @@ const ProfilePage: React.FC = () => {
       fetchProfile(
         account.id,
         () => {
-          dispatch(
-            updateContestRecords(
-              () => setIsUpdating(true),
-              () => setIsUpdating(false),
-              () => setIsUpdating(false)
-            )
-          );
+          if (!isUpdatingRating) {
+            dispatch(updateContestRecords());
+          }
         },
         () => {
           history.push('/profile/update');
@@ -79,7 +75,7 @@ const ProfilePage: React.FC = () => {
       <Header as="h2" style={getRatingColorStyle(profile.rating)}>
         {profile.handle}
       </Header>
-      <Loader inverted={true} active={isUpdating} />
+      <Loader inverted={true} active={isUpdatingRating} />
       <Link to="/profile/update">
         <Button
           basic={true}

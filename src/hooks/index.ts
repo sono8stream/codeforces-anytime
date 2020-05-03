@@ -10,19 +10,17 @@ export const useAccountInfo = (): AccountInfo => {
 };
 
 export const useProfile = (): UserProfile => {
-  return useSelector((state: RootState) => {
-    return state.profile;
-  });
+  return useSelector((state: RootState) => state.profile);
 };
 
 export const useAvailableContests = (): AvailableContestInfo[] => {
-  return useSelector((state: RootState) => {
-    return state.availableContests;
-  });
+  return useSelector((state: RootState) => state.availableContests);
 };
 
 export const useOfficialRatingRecords = (): ContestRecord[] => {
-  return useSelector((state: RootState) => {
-    return state.officialRatingRecords;
-  });
+  return useSelector((state: RootState) => state.officialRatingRecords);
+};
+
+export const useIsUpdatingRating = (): boolean => {
+  return useSelector((state: RootState) => state.isUpdatingRating);
 };
