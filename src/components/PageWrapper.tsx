@@ -40,17 +40,33 @@ const PageWrapper: React.FC<{ children: any }> = ({ children }) => {
         >
           Codeforces Anytime
         </Menu.Item>
+        <Menu.Item
+          onClick={() => {
+            history.push('/contests');
+          }}
+        >
+          Contests
+        </Menu.Item>
         {(() => {
           if (account.id) {
             return (
-              <Menu.Item
-                position="right"
-                onClick={() => {
-                  dispatch(logout());
-                }}
-              >
-                Logout
-              </Menu.Item>
+              <>
+                <Menu.Item
+                  position="right"
+                  onClick={() => {
+                    history.push('/profile');
+                  }}
+                >
+                  Profile
+                </Menu.Item>
+                <Menu.Item
+                  onClick={() => {
+                    dispatch(logout());
+                  }}
+                >
+                  Logout
+                </Menu.Item>
+              </>
             );
           } else {
             return null;

@@ -5,6 +5,7 @@ import { login } from '../actions';
 import firebase from '../firebase';
 import history from '../history';
 import { useAccountInfo } from '../hooks';
+import { Link } from 'react-router-dom';
 
 const StartPage: React.FC = () => {
   const dispatch = useDispatch();
@@ -113,6 +114,9 @@ const StartPage: React.FC = () => {
             レート更新処理では，1コンテストあたり30秒前後の計算時間が発生します
           </List.Item>
         </List>
+        <Header as="h5">
+          対応中のコンテスト一覧は<Link to="contests">こちら</Link>！
+        </Header>
       </Segment>
     </div>
   );

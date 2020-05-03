@@ -10,6 +10,7 @@ import StartPage from './components/StartPage';
 import UpdateProfilePage from './components/UpdateProfilePage';
 import history from './history';
 import rootReducer from './reducers';
+import ContestsPage from './components/ContestsPage';
 
 const store = createStore(rootReducer, applyMiddleware(thunk));
 
@@ -18,6 +19,7 @@ const App: React.FC = () => {
     <Provider store={store}>
       <PageWrapper>
         <Router history={history}>
+          <Route exact={true} path="/contests" component={ContestsPage} />
           <Route exact={true} path="/profile" component={ProfilePage} />
           <Route
             exact={true}

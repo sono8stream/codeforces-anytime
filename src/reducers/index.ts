@@ -7,9 +7,14 @@ import {
   logoutActions,
   updateContestRecordsActions,
   updateProfileActions,
+  fetchAvailableContestInfoActions,
+  fetchOfficialRatingRecordsActions,
 } from '../actions';
 import AccountInfo from '../types/accountInfo';
 import UserProfile from '../types/userProfile';
+import RootState from '../types/rootState';
+import AvailableContestInfo from '../types/availableContestInfo';
+import ContestRecord from '../types/contestRecord';
 
 const profileReducer = reducerWithInitialState<UserProfile>({
   handle: '',
@@ -36,6 +41,25 @@ const profileReducer = reducerWithInitialState<UserProfile>({
     registrationTime: 0,
   }));
 
+const availableContestsResucer = reducerWithInitialState<
+  AvailableContestInfo[]
+>([]).case(
+  fetchAvailableContestInfoActions.done,
+  (prev, payload) => payload.result
+);
+
+const officialRatingRecordsReducer = reducerWithInitialState<ContestRecord[]>(
+  []
+).case(
+  fetchOfficialRatingRecordsActions.done,
+  (prev, payload) => payload.result
+);
+
+const isUpdatingRatingReducer = reducerWithInitialState<boolean>(false)
+  .case(updateContestRecordsActions.started, () => true)
+  .case(updateContestRecordsActions.done, () => false)
+  .case(updateContestRecordsActions.failed, () => false);
+
 const accountReducer = reducerWithInitialState<AccountInfo>({
   email: '',
   id: '',
@@ -47,6 +71,12 @@ const accountReducer = reducerWithInitialState<AccountInfo>({
     id: '',
   }));
 
-const rootReducer = combineReducers({ profileReducer, accountReducer });
+const rootReducer = combineReducers<RootState>({
+  profile: profileReducer,
+  availableContests: availableContestsResucer,
+  officialRatingRecords: officialRatingRecordsReducer,
+  isUpdatingRating: isUpdatingRatingReducer,
+  account: accountReducer,
+});
 
 export default rootReducer;

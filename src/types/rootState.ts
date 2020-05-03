@@ -1,7 +1,12 @@
 import AccountInfo from './accountInfo';
 import UserProfile from './userProfile';
+import AvailableContestInfo from './availableContestInfo';
+import ContestRecord from './contestRecord';
 
 export default interface RootState {
-  profileReducer: UserProfile;
-  accountReducer: AccountInfo;
+  profile: UserProfile;
+  availableContests: AvailableContestInfo[];
+  officialRatingRecords: ContestRecord[];
+  isUpdatingRating: boolean;
+  account: AccountInfo;
 }

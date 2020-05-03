@@ -1,5 +1,7 @@
 {
   "projects": {
-    "default": "codeforces-anytime"
+    "production": "codeforces-anytime",
+    "default": "codeforces-anytime-dev",
+    "develop": "codeforces-anytime-dev"
   }
 }
