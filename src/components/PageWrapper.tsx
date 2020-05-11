@@ -61,7 +61,7 @@ const PageWrapper: React.FC<{ children: any }> = ({ children }) => {
                 <Menu.Item
                   position="right"
                   onClick={() => {
-                    history.push('/profile');
+                    history.push(`/users/${account.id}`);
                   }}
                 >
                   Profile

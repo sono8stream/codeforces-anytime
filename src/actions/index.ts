@@ -295,7 +295,10 @@ export const fetchUsersActions = actionCreator.async<
   { error: Error }
 >('FetchUsersAction');
 
-export const fetchUsers = () => async (dispatch: Dispatch) => {
+export const fetchUsers = (
+  onDone?: (users: { [id: string]: UserProfile }) => void,
+  onFailed?: () => void
+) => async (dispatch: Dispatch) => {
   dispatch(fetchUsersActions.started({}));
   try {
     const users = await fetchUsersAPI();
@@ -307,10 +310,16 @@ export const fetchUsers = () => async (dispatch: Dispatch) => {
           result: users,
         })
       );
+      if (onDone) {
+        onDone(users);
+      }
     } else {
       throw new Error('Cannot fetch');
     }
   } catch (error) {
     dispatch(fetchUsersActions.failed({ params: {}, error: { error } }));
+    if (onFailed) {
+      onFailed();
+    }
   }
 };

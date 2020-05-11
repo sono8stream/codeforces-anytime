@@ -22,7 +22,7 @@ const App: React.FC = () => {
         <Router history={history}>
           <Route exact={true} path="/contests" component={ContestsPage} />
           <Route exact={true} path="/ranking" component={RankingPage} />
-          <Route exact={true} path="/profile" component={ProfilePage} />
+          <Route exact={true} path="/users/:id" component={ProfilePage} />
           <Route
             exact={true}
             path="/profile/update"

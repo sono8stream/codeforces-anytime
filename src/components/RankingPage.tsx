@@ -4,6 +4,7 @@ import { Header, Table } from 'semantic-ui-react';
 import { fetchUsers } from '../actions';
 import { useUsers } from '../hooks';
 import getRatingColorStyle from '../utils/getRatingColorStyle';
+import { Link } from 'react-router-dom';
 
 const RankingPage: React.FC = () => {
   const dispatch = useDispatch();
@@ -61,16 +62,15 @@ const RankingPage: React.FC = () => {
                 <Table.Row key={user.data.handle}>
                   <Table.Cell>{rank}</Table.Cell>
                   <Table.Cell>
-                    <a
-                      href={`anywhere`}
-                      target="blank"
+                    <Link
+                      to={`/users/${user.id}`}
                       style={{
                         ...getRatingColorStyle(user.data.rating),
                         fontWeight: 'bold',
                       }}
                     >
                       {user.data.handle}
-                    </a>
+                    </Link>
                   </Table.Cell>
                   <Table.Cell>{user.data.rating}</Table.Cell>
                   <Table.Cell>{user.data.records.length - 1}</Table.Cell>
