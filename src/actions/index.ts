@@ -12,6 +12,7 @@ import { getParticipateVirtuals } from '../utils/getParticipateVirtuals';
 import AvailableContestInfo from '../types/availableContestInfo';
 import { fetchAvailableContestInfoAPI } from '../api/availableContestInfo';
 import { fetchOfficialRatingRecordsAPI } from '../api/fetchOfficialRatingRecords';
+import { fetchUsersAPI } from '../api/fetchUsers';
 
 const actionCreator = actionCreatorFactory();
 
@@ -285,5 +286,31 @@ export const fetchOfficialRatingRecords = (handle: string) => async (
     dispatch(
       fetchOfficialRatingRecordsActions.failed({ params: {}, error: { error } })
     );
+  }
+};
+
+export const fetchUsersActions = actionCreator.async<
+  {},
+  { [id: string]: UserProfile },
+  { error: Error }
+>('FetchUsersAction');
+
+export const fetchUsers = () => async (dispatch: Dispatch) => {
+  dispatch(fetchUsersActions.started({}));
+  try {
+    const users = await fetchUsersAPI();
+
+    if (users) {
+      dispatch(
+        fetchUsersActions.done({
+          params: {},
+          result: users,
+        })
+      );
+    } else {
+      throw new Error('Cannot fetch');
+    }
+  } catch (error) {
+    dispatch(fetchUsersActions.failed({ params: {}, error: { error } }));
   }
 };

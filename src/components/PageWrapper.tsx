@@ -47,6 +47,13 @@ const PageWrapper: React.FC<{ children: any }> = ({ children }) => {
         >
           Contests
         </Menu.Item>
+        <Menu.Item
+          onClick={() => {
+            history.push('/ranking');
+          }}
+        >
+          Ranking
+        </Menu.Item>
         {(() => {
           if (account.id) {
             return (
