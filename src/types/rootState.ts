@@ -8,5 +8,6 @@ export default interface RootState {
   availableContests: AvailableContestInfo[];
   officialRatingRecords: ContestRecord[];
   isUpdatingRating: boolean;
+  users: { [id: string]: UserProfile };
   account: AccountInfo;
 }

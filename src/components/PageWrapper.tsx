@@ -47,6 +47,13 @@ const PageWrapper: React.FC<{ children: any }> = ({ children }) => {
         >
           Contests
         </Menu.Item>
+        <Menu.Item
+          onClick={() => {
+            history.push('/ranking');
+          }}
+        >
+          Ranking
+        </Menu.Item>
         {(() => {
           if (account.id) {
             return (
@@ -54,7 +61,7 @@ const PageWrapper: React.FC<{ children: any }> = ({ children }) => {
                 <Menu.Item
                   position="right"
                   onClick={() => {
-                    history.push('/profile');
+                    history.push(`/users/${account.id}`);
                   }}
                 >
                   Profile

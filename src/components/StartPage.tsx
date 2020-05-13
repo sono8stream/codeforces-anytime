@@ -19,7 +19,6 @@ const StartPage: React.FC = () => {
         () => setOnLoging(true),
         () => {
           setOnLoging(false);
-          history.push('profile');
         },
         () => setOnLoging(false)
       )
@@ -33,7 +32,6 @@ const StartPage: React.FC = () => {
         () => setOnLoging(true),
         () => {
           setOnLoging(false);
-          history.push('profile');
         },
         () => setOnLoging(false)
       )
@@ -79,7 +77,7 @@ const StartPage: React.FC = () => {
               basic={true}
               color="green"
               onClick={() => {
-                history.push('/profile');
+                history.push(`/users/${account.id}`);
               }}
             />
           );

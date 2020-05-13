@@ -9,6 +9,7 @@ import {
   updateProfileActions,
   fetchAvailableContestInfoActions,
   fetchOfficialRatingRecordsActions,
+  fetchUsersActions,
 } from '../actions';
 import AccountInfo from '../types/accountInfo';
 import UserProfile from '../types/userProfile';
@@ -71,11 +72,16 @@ const accountReducer = reducerWithInitialState<AccountInfo>({
     id: '',
   }));
 
+const usersReducer = reducerWithInitialState<{ [id: string]: UserProfile }>(
+  {}
+).case(fetchUsersActions.done, (prev, payload) => payload.result);
+
 const rootReducer = combineReducers<RootState>({
   profile: profileReducer,
   availableContests: availableContestsResucer,
   officialRatingRecords: officialRatingRecordsReducer,
   isUpdatingRating: isUpdatingRatingReducer,
+  users: usersReducer,
   account: accountReducer,
 });
 

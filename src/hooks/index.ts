@@ -24,3 +24,7 @@ export const useOfficialRatingRecords = (): ContestRecord[] => {
 export const useIsUpdatingRating = (): boolean => {
   return useSelector((state: RootState) => state.isUpdatingRating);
 };
+
+export const useUsers = (): { [id: string]: UserProfile } => {
+  return useSelector((state: RootState) => state.users);
+};

@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, RouteComponentProps } from 'react-router-dom';
 import {
   CartesianGrid,
   ResponsiveContainer,
@@ -11,24 +11,35 @@ import {
   YAxis,
 } from 'recharts';
 import { Button, Header, Loader, Segment, Table } from 'semantic-ui-react';
-import { fetchProfile, updateContestRecords } from '../actions';
+import { fetchProfile, updateContestRecords, fetchUsers } from '../actions';
 import history from '../history';
-import { useAccountInfo, useProfile, useIsUpdatingRating } from '../hooks';
+import {
+  useAccountInfo,
+  useProfile,
+  useIsUpdatingRating,
+  useUsers,
+} from '../hooks';
 import { dateStringFromSeconds } from '../utils/dateString';
 import { monthStringFromTime } from '../utils/dateString';
 import getRatingColorStyle, {
   ratingColors,
 } from '../utils/getRatingColorStyle';
 import { calculateTimeTick } from '../utils/graphUtilities';
+import UserProfile from '../types/userProfile';
 
-const ProfilePage: React.FC = () => {
+const ProfilePage: React.FC<RouteComponentProps<{ id: string }>> = (props) => {
   const dispatch = useDispatch();
   const account = useAccountInfo();
+  const users = useUsers();
   const profile = useProfile();
   const isUpdatingRating = useIsUpdatingRating();
 
   useEffect(() => {
-    if (!account.id) {
+    window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
+    if (!account.id || account.id !== props.match.params.id) {
       return;
     }
     dispatch(
@@ -46,11 +57,31 @@ const ProfilePage: React.FC = () => {
     );
   }, [dispatch, account]);
 
-  if (!account.id || !profile.handle) {
+  useEffect(() => {
+    dispatch(
+      fetchUsers(
+        (currentUsers: { [id: string]: UserProfile }) => {
+          if (!currentUsers[props.match.params.id]) {
+            history.push('/');
+          }
+        },
+        () => {
+          history.push('/');
+        }
+      )
+    );
+  }, [dispatch]);
+
+  if (!users[props.match.params.id]) {
     return null;
   }
 
-  const data = profile.records
+  let userInfo = users[props.match.params.id];
+  if (profile.records.length > 0 && account?.id === props.match.params.id) {
+    userInfo = profile;
+  }
+
+  const data = userInfo.records
     .map((record) => {
       return {
         name: record.contestName,
@@ -61,7 +92,7 @@ const ProfilePage: React.FC = () => {
     .reverse();
 
   const nameFromTime: { [time: number]: string } = {};
-  profile.records.forEach((record) => {
+  userInfo.records.forEach((record) => {
     nameFromTime[record.startTime] = record.contestName;
   });
 
@@ -72,20 +103,26 @@ const ProfilePage: React.FC = () => {
 
   return (
     <>
-      <Header as="h2" style={getRatingColorStyle(profile.rating)}>
-        {profile.handle}
+      <Header as="h2" style={getRatingColorStyle(userInfo.rating)}>
+        {userInfo.handle}
       </Header>
       <Loader inverted={true} active={isUpdatingRating} />
-      <Link to="/profile/update">
-        <Button
-          basic={true}
-          floated="right"
-          content="User setting"
-          color="green"
-        />
-      </Link>
+      {(() => {
+        if (account?.id === props.match.params.id) {
+          return (
+            <Link to="/profile/update">
+              <Button
+                basic={true}
+                floated="right"
+                content="User setting"
+                color="green"
+              />
+            </Link>
+          );
+        }
+      })()}
       <Header as="h4">
-        Last Update:{dateStringFromSeconds(profile.lastUpdateTime)}
+        Last Update:{dateStringFromSeconds(userInfo.lastUpdateTime)}
       </Header>
       <ResponsiveContainer width="95%" height={300}>
         <ScatterChart
@@ -153,7 +190,7 @@ const ProfilePage: React.FC = () => {
         </Table.Header>
 
         <Table.Body>
-          {profile.records.map((record) => {
+          {userInfo.records.map((record) => {
             return (
               <Table.Row key={record.startTime}>
                 <Table.Cell>

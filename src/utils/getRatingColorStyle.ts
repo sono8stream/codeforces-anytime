@@ -12,7 +12,9 @@ export const ratingColors = [
   '#808080',
 ];
 
-const getRatingColorStyle = (rating: number) => {
+const getRatingColorStyle: (rating: number) => { color: string } = (
+  rating: number
+) => {
   if (rating >= 2400) {
     return { color: '#FF0000' };
   }

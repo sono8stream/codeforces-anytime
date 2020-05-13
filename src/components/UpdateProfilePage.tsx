@@ -61,7 +61,7 @@ const UpdateProfilePage: React.FC = () => {
           // setIsLoading(true);
         },
         () => {
-          history.push('/profile');
+          history.push(`/users/${account.id}`);
         },
         () => {} // setIsLoading(false)
       )
@@ -100,7 +100,7 @@ const UpdateProfilePage: React.FC = () => {
           color="red"
           onClick={() => {
             if (profile.handle) {
-              history.push('/profile');
+              history.push(`/users/${account.id}`);
             } else {
               history.push('/');
             }
