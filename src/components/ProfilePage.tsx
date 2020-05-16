@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { Link, RouteComponentProps } from 'react-router-dom';
+import { Link, RouteComponentProps, useHistory } from 'react-router-dom';
 import {
   CartesianGrid,
   ResponsiveContainer,
@@ -12,7 +12,6 @@ import {
 } from 'recharts';
 import { Button, Header, Loader, Segment, Table } from 'semantic-ui-react';
 import { fetchProfile, updateContestRecords, fetchUsers } from '../actions';
-import history from '../history';
 import {
   useAccountInfo,
   useProfile,
@@ -28,15 +27,13 @@ import { calculateTimeTick } from '../utils/graphUtilities';
 import UserProfile from '../types/userProfile';
 
 const ProfilePage: React.FC<RouteComponentProps<{ id: string }>> = (props) => {
+  const history = useHistory();
+
   const dispatch = useDispatch();
   const account = useAccountInfo();
   const users = useUsers();
   const profile = useProfile();
   const isUpdatingRating = useIsUpdatingRating();
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
 
   useEffect(() => {
     if (!account.id || account.id !== props.match.params.id) {
@@ -55,7 +52,7 @@ const ProfilePage: React.FC<RouteComponentProps<{ id: string }>> = (props) => {
         }
       )
     );
-  }, [dispatch, account]);
+  }, [dispatch, account, history, isUpdatingRating, props.match.params.id]);
 
   useEffect(() => {
     dispatch(
@@ -70,7 +67,7 @@ const ProfilePage: React.FC<RouteComponentProps<{ id: string }>> = (props) => {
         }
       )
     );
-  }, [dispatch]);
+  }, [dispatch, history, props.match.params.id]);
 
   if (!users[props.match.params.id]) {
     return null;

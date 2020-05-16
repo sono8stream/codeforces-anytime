@@ -11,8 +11,10 @@ const RankingPage: React.FC = () => {
   const users = useUsers();
 
   useEffect(() => {
-    dispatch(fetchUsers());
-  }, [dispatch]);
+    if (Object.keys(users).length === 0) {
+      dispatch(fetchUsers());
+    }
+  }, [dispatch, users]);
 
   return (
     <>

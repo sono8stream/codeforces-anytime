@@ -3,11 +3,13 @@ import { useDispatch } from 'react-redux';
 import { Button, Dimmer, Form, Header, Loader, Modal } from 'semantic-ui-react';
 import { updateProfile } from '../actions';
 import { fetchRealRating } from '../api/fetchRealRating';
-import history from '../history';
 import { useAccountInfo, useProfile } from '../hooks';
 import getRatingColorStyle from '../utils/getRatingColorStyle';
+import { useHistory } from 'react-router';
 
 const UpdateProfilePage: React.FC = () => {
+  const history = useHistory();
+
   const dispatch = useDispatch();
   const account = useAccountInfo();
   const profile = useProfile();
@@ -66,7 +68,7 @@ const UpdateProfilePage: React.FC = () => {
         () => {} // setIsLoading(false)
       )
     );
-  }, [account, dispatch, handle, rating]);
+  }, [account, dispatch, handle, rating, history]);
 
   if (!account.id) {
     return null;

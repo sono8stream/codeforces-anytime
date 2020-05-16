@@ -8,18 +8,27 @@ import PageWrapper from './components/PageWrapper';
 import ProfilePage from './components/ProfilePage';
 import StartPage from './components/StartPage';
 import UpdateProfilePage from './components/UpdateProfilePage';
-import history from './history';
+import { createBrowserHistory } from 'history';
 import rootReducer from './reducers';
 import ContestsPage from './components/ContestsPage';
 import RankingPage from './components/RankingPage';
+import ReactGA from 'react-ga';
+import { trackID } from './ga/config';
 
 const store = createStore(rootReducer, applyMiddleware(thunk));
 
 const App: React.FC = () => {
+  ReactGA.initialize(trackID);
+  const history = createBrowserHistory();
+  history.listen(({ pathname }) => {
+    ReactGA.set({ page: pathname });
+    ReactGA.pageview(pathname);
+  });
+
   return (
     <Provider store={store}>
-      <PageWrapper>
-        <Router history={history}>
+      <Router history={history}>
+        <PageWrapper>
           <Route exact={true} path="/contests" component={ContestsPage} />
           <Route exact={true} path="/ranking" component={RankingPage} />
           <Route exact={true} path="/users/:id" component={ProfilePage} />
@@ -30,8 +39,8 @@ const App: React.FC = () => {
           />
           <Route exact={true} path="/contact" component={Contact} />
           <Route exact={true} path="/" component={StartPage} />
-        </Router>
-      </PageWrapper>
+        </PageWrapper>
+      </Router>
     </Provider>
   );
 };
