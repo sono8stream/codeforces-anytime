@@ -29,8 +29,10 @@ const ContestsPage: React.FC = () => {
   }
 
   useEffect(() => {
-    dispatch(fetchAvailableContestInfo());
-  }, [dispatch]);
+    if (availableContests.length === 0) {
+      dispatch(fetchAvailableContestInfo());
+    }
+  }, [dispatch, availableContests]);
 
   useEffect(() => {
     if (!account.id) {

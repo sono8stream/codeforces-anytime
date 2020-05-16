@@ -3,12 +3,26 @@ import { useDispatch } from 'react-redux';
 import { Button, Container, Divider, Menu, Segment } from 'semantic-ui-react';
 import { changeAccountInfo, logout } from '../actions';
 import firebase from '../firebase';
-import history from '../history';
 import { useAccountInfo } from '../hooks';
+import { useHistory, useLocation } from 'react-router';
+import ReactGA from 'react-ga';
 
 const PageWrapper: React.FC<{ children: any }> = ({ children }) => {
+  const history = useHistory();
+  const location = useLocation();
+
   const dispatch = useDispatch();
   const account = useAccountInfo();
+
+  useEffect(() => {
+    const { pathname } = location;
+    ReactGA.set({ page: pathname });
+    ReactGA.pageview(pathname);
+  }, [location]);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location]);
 
   useEffect(() => {
     const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
@@ -21,7 +35,7 @@ const PageWrapper: React.FC<{ children: any }> = ({ children }) => {
     return () => {
       unsubscribe();
     };
-  }, [dispatch]);
+  }, [dispatch, history]);
 
   return (
     <div

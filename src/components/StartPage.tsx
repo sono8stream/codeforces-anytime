@@ -3,11 +3,12 @@ import { useDispatch } from 'react-redux';
 import { Button, Header, Icon, List, Loader, Segment } from 'semantic-ui-react';
 import { login } from '../actions';
 import firebase from '../firebase';
-import history from '../history';
 import { useAccountInfo } from '../hooks';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 const StartPage: React.FC = () => {
+  const history = useHistory();
+
   const dispatch = useDispatch();
   const account = useAccountInfo();
   const [onLoging, setOnLoging] = useState(false);
