@@ -39,6 +39,7 @@ const ProfilePage: React.FC<RouteComponentProps<{ id: string }>> = (props) => {
     if (!account.id || account.id !== props.match.params.id) {
       return;
     }
+
     dispatch(
       fetchProfile(
         account.id,
@@ -55,18 +56,20 @@ const ProfilePage: React.FC<RouteComponentProps<{ id: string }>> = (props) => {
   }, [dispatch, account, history, isUpdatingRating, props.match.params.id]);
 
   useEffect(() => {
-    dispatch(
-      fetchUsers(
-        (currentUsers: { [id: string]: UserProfile }) => {
-          if (!currentUsers[props.match.params.id]) {
+    if (Object.keys(users).length === 0) {
+      dispatch(
+        fetchUsers(
+          (currentUsers: { [id: string]: UserProfile }) => {
+            if (!currentUsers[props.match.params.id]) {
+              history.push('/');
+            }
+          },
+          () => {
             history.push('/');
           }
-        },
-        () => {
-          history.push('/');
-        }
-      )
-    );
+        )
+      );
+    }
   }, [dispatch, history, props.match.params.id]);
 
   if (!users[props.match.params.id]) {
