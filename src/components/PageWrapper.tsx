@@ -27,7 +27,6 @@ const PageWrapper: React.FC<{ children: any }> = ({ children }) => {
   useEffect(() => {
     const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
       if (user === null || user.email === null) {
-        history.push('/');
         return;
       }
       dispatch(changeAccountInfo({ email: user.email, id: user.uid }));
