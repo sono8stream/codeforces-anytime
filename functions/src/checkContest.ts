@@ -83,7 +83,7 @@ const validateContestName = async (id: number) => {
     return '';
   }
   const ratingChangesResponse = (await response.json()) as RatingChangesResponse;
-  return ratingChangesResponse.result
+  return ratingChangesResponse.result && ratingChangesResponse.result[0]
     ? ratingChangesResponse.result[0].contestName
     : '';
 };
