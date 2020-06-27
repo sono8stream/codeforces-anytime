@@ -186,9 +186,9 @@ const ProfilePage: React.FC = () => {
             <Table.HeaderCell>Date</Table.HeaderCell>
             <Table.HeaderCell>Contest</Table.HeaderCell>
             <Table.HeaderCell>Rank</Table.HeaderCell>
+            <Table.HeaderCell>Perf.</Table.HeaderCell>
             <Table.HeaderCell>Rating</Table.HeaderCell>
             <Table.HeaderCell>Delta</Table.HeaderCell>
-            <Table.HeaderCell>Performance</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
 
@@ -215,13 +215,13 @@ const ProfilePage: React.FC = () => {
                 </Table.Cell>
                 <Table.Cell>{record.contestName}</Table.Cell>
                 <Table.Cell>{record.rank}</Table.Cell>
+                <Table.Cell style={getRatingColorStyle(performance)}>
+                  {performance}
+                </Table.Cell>
                 <Table.Cell style={getRatingColorStyle(record.newRating)}>
                   {record.newRating}
                 </Table.Cell>
                 <Table.Cell>{delta}</Table.Cell>
-                <Table.Cell style={getRatingColorStyle(performance)}>
-                  {performance}
-                </Table.Cell>
               </Table.Row>
             );
           })}
