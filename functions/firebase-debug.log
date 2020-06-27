@@ -1,0 +1,41 @@
+[debug] [2020-06-27T10:06:41.439Z] ----------------------------------------------------------------------
+[debug] [2020-06-27T10:06:41.444Z] Command:       /usr/local/bin/node /usr/local/bin/firebase functions:shell
+[debug] [2020-06-27T10:06:41.445Z] CLI Version:   8.0.3
+[debug] [2020-06-27T10:06:41.445Z] Platform:      linux
+[debug] [2020-06-27T10:06:41.446Z] Node Version:  v12.16.2
+[debug] [2020-06-27T10:06:41.447Z] Time:          Sat Jun 27 2020 19:06:41 GMT+0900 (GMT+09:00)
+[debug] [2020-06-27T10:06:41.447Z] ----------------------------------------------------------------------
+[debug] [2020-06-27T10:06:41.447Z] 
+[debug] [2020-06-27T10:06:41.604Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2020-06-27T10:06:41.605Z] > authorizing via signed-in user
+[debug] [2020-06-27T10:06:41.606Z] [iam] checking project codeforces-anytime for permissions ["firebase.projects.get"]
+[debug] [2020-06-27T10:06:41.611Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2020-06-27T10:06:41.611Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>
+[debug] [2020-06-27T10:06:41.823Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=utf-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Sat, 27 Jun 2020 10:06:41 GMT","server":"scaffolding on HTTPServer2","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3-27=\":443\"; ma=2592000,h3-25=\":443\"; ma=2592000,h3-T050=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2020-06-27T10:06:41.912Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/codeforces-anytime:testIamPermissions  
+ {"permissions":["firebase.projects.get"]}
+[debug] [2020-06-27T10:06:42.646Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Sat, 27 Jun 2020 10:06:42 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","server-timing":"gfet4t7; dur=587","alt-svc":"h3-27=\":443\"; ma=2592000,h3-25=\":443\"; ma=2592000,h3-T050=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[warn] ⚠  Your requested "node" version "8" doesn't match your global version "12"
+[info] ✔  functions: functions emulator started at http://localhost:5000
+[debug] [2020-06-27T10:06:42.660Z] [functions] Watching "/home/sono8/react/codeforces-anytime/functions" for Cloud Functions...
+[debug] [2020-06-27T10:06:42.667Z] DEBUG: [worker-pool] addWorker(~diagnostic~)
+[debug] [2020-06-27T10:06:42.668Z] DEBUG: [worker-pool] Adding worker with key ~diagnostic~, total=1
+[debug] [2020-06-27T10:06:42.668Z] DEBUG: [worker-pool] submitWork(triggerId=)
+[debug] [2020-06-27T10:06:42.668Z] DEBUG: [worker-~diagnostic~-1a431976-2f59-4c58-9f9a-0c9751c2d927]: Assigning socketPath: /tmp/fire_emu_21701.sock
+[debug] [2020-06-27T10:06:42.668Z] DEBUG: [worker-~diagnostic~-1a431976-2f59-4c58-9f9a-0c9751c2d927]: BUSY
+[debug] [2020-06-27T10:06:42.911Z] DEBUG: [runtime-status] [21701] Functions runtime initialized. {"cwd":"/home/sono8/react/codeforces-anytime/functions","node_version":"12.16.2"}
+[debug] [2020-06-27T10:06:42.911Z] DEBUG: [runtime-status] [21701] Disabled runtime features: undefined
+[debug] [2020-06-27T10:06:42.931Z] DEBUG: [runtime-status] [21701] Resolved module firebase-admin {"declared":true,"installed":true,"version":"8.12.1","resolution":"/home/sono8/react/codeforces-anytime/functions/node_modules/firebase-admin/lib/index.js"}
+[debug] [2020-06-27T10:06:42.934Z] DEBUG: [runtime-status] [21701] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.7.0","resolution":"/home/sono8/react/codeforces-anytime/functions/node_modules/firebase-functions/lib/index.js"}
+[debug] [2020-06-27T10:06:42.938Z] DEBUG: [runtime-status] [21701] Outgoing network have been stubbed. [{"name":"http","status":"mocked"},{"name":"http","status":"mocked"},{"name":"https","status":"mocked"},{"name":"https","status":"mocked"},{"name":"net","status":"mocked"}]
+[debug] [2020-06-27T10:06:43.381Z] DEBUG: [runtime-status] [21701] Checked functions.config() {"config":{}}
+[debug] [2020-06-27T10:06:43.384Z] DEBUG: [runtime-status] [21701] Error in handleMessage: {"frb":{"cwd":"/home/sono8/react/codeforces-anytime/functions","projectId":"codeforces-anytime","triggerId":"","emulators":{},"socketPath":"/tmp/fire_emu_21701.sock"},"opts":{"nodeBinary":"/usr/local/bin/node"}} => TypeError: Cannot set property config of #<Object> which has only a getter: TypeError: Cannot set property config of #<Object> which has only a getter
+    at /usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:455:19
+    at Generator.next (<anonymous>)
+    at fulfilled (/usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:5:58)
+    at processTicksAndRejections (internal/process/task_queues.js:97:5)
+[warn] ⚠  functions: Cannot set property config of #<Object> which has only a getter
+[warn] ⚠  Your function was killed because it raised an unhandled error.
+[debug] [2020-06-27T10:06:43.392Z] DEBUG: [worker-~diagnostic~-1a431976-2f59-4c58-9f9a-0c9751c2d927]: exited
+[debug] [2020-06-27T10:06:43.393Z] DEBUG: [worker-~diagnostic~-1a431976-2f59-4c58-9f9a-0c9751c2d927]: FINISHED
