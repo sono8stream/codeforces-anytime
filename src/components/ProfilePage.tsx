@@ -187,11 +187,27 @@ const ProfilePage: React.FC = () => {
             <Table.HeaderCell>Contest</Table.HeaderCell>
             <Table.HeaderCell>Rank</Table.HeaderCell>
             <Table.HeaderCell>Rating</Table.HeaderCell>
+            <Table.HeaderCell>Delta</Table.HeaderCell>
+            <Table.HeaderCell>Performance</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
 
         <Table.Body>
-          {userInfo.records.map((record) => {
+          {userInfo.records.map((record, idx) => {
+            let delta;
+            let performance;
+            if (idx === userInfo.records.length - 1) {
+              delta = '-';
+              performance = 0;
+            } else {
+              if (record.newRating > record.oldRating) {
+                delta = '+' + (record.newRating - record.oldRating).toString();
+              } else {
+                delta = record.newRating - record.oldRating;
+              }
+              performance = 2 * record.newRating - record.oldRating;
+            }
+
             return (
               <Table.Row key={record.startTime}>
                 <Table.Cell>
@@ -201,6 +217,10 @@ const ProfilePage: React.FC = () => {
                 <Table.Cell>{record.rank}</Table.Cell>
                 <Table.Cell style={getRatingColorStyle(record.newRating)}>
                   {record.newRating}
+                </Table.Cell>
+                <Table.Cell>{delta}</Table.Cell>
+                <Table.Cell style={getRatingColorStyle(performance)}>
+                  {performance}
                 </Table.Cell>
               </Table.Row>
             );
