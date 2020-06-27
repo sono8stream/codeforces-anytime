@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { Link, RouteComponentProps, useHistory } from 'react-router-dom';
+import { Link, useHistory, useParams } from 'react-router-dom';
 import {
   CartesianGrid,
   ResponsiveContainer,
@@ -26,8 +26,9 @@ import getRatingColorStyle, {
 import { calculateTimeTick } from '../utils/graphUtilities';
 import UserProfile from '../types/userProfile';
 
-const ProfilePage: React.FC<RouteComponentProps<{ id: string }>> = (props) => {
+const ProfilePage: React.FC = () => {
   const history = useHistory();
+  const urlParams = useParams<{ id: string }>();
 
   const dispatch = useDispatch();
   const account = useAccountInfo();
@@ -36,7 +37,7 @@ const ProfilePage: React.FC<RouteComponentProps<{ id: string }>> = (props) => {
   const isUpdatingRating = useIsUpdatingRating();
 
   useEffect(() => {
-    if (!account.id || account.id !== props.match.params.id) {
+    if (!account.id || account.id !== urlParams.id) {
       return;
     }
 
@@ -53,14 +54,14 @@ const ProfilePage: React.FC<RouteComponentProps<{ id: string }>> = (props) => {
         }
       )
     );
-  }, [dispatch, account, history, isUpdatingRating, props.match.params.id]);
+  }, [dispatch, account, history, urlParams.id]);
 
   useEffect(() => {
     if (Object.keys(users).length === 0) {
       dispatch(
         fetchUsers(
           (currentUsers: { [id: string]: UserProfile }) => {
-            if (!currentUsers[props.match.params.id]) {
+            if (!currentUsers[urlParams.id]) {
               history.push('/');
             }
           },
@@ -70,14 +71,14 @@ const ProfilePage: React.FC<RouteComponentProps<{ id: string }>> = (props) => {
         )
       );
     }
-  }, [dispatch, history, props.match.params.id]);
+  }, [dispatch, history, urlParams.id]);
 
-  if (!users[props.match.params.id]) {
+  if (!users[urlParams.id]) {
     return null;
   }
 
-  let userInfo = users[props.match.params.id];
-  if (profile.records.length > 0 && account?.id === props.match.params.id) {
+  let userInfo = users[urlParams.id];
+  if (profile.records.length > 0 && account?.id === urlParams.id) {
     userInfo = profile;
   }
 
@@ -108,7 +109,7 @@ const ProfilePage: React.FC<RouteComponentProps<{ id: string }>> = (props) => {
       </Header>
       <Loader inverted={true} active={isUpdatingRating} />
       {(() => {
-        if (account?.id === props.match.params.id) {
+        if (account?.id === urlParams.id) {
           return (
             <Link to="/profile/update">
               <Button

@@ -1,14 +1,14 @@
 interface Result {
   contest: { name: string; durationSeconds: number };
-  rows: Array<{
+  rows: {
     party: {
-      members: Array<{ handle: string }>;
+      members: { handle: string }[];
       participantType: string;
       ghost: boolean;
       startTimeSeconds: number;
     };
     rank: number;
-  }>;
+  }[];
 }
 
 export const calculateVirtualRank = async (data: {
@@ -49,13 +49,13 @@ export const calculateVirtualRank = async (data: {
         continue;
       }
 
-      for (const _ of members) {
+      members.forEach(() => {
         cnt++;
         if (user.rank !== assignedRank) {
           nowRank = cnt;
           assignedRank = user.rank;
         }
-      }
+      });
       if (isMe) {
         myRank = nowRank;
         break;
