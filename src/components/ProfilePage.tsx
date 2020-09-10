@@ -10,7 +10,15 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
-import { Button, Header, Loader, Segment, Table } from 'semantic-ui-react';
+import {
+  Button,
+  Header,
+  Loader,
+  Segment,
+  Table,
+  Icon,
+  Grid,
+} from 'semantic-ui-react';
 import { fetchProfile, updateContestRecords, fetchUsers } from '../actions';
 import {
   useAccountInfo,
@@ -104,10 +112,18 @@ const ProfilePage: React.FC = () => {
 
   return (
     <>
+      <Loader inverted={true} active={isUpdatingRating} />
       <Header as="h2" style={getRatingColorStyle(userInfo.rating)}>
         {userInfo.handle}
+        &nbsp;
+        <a
+          href={`https://codeforces.com/profile/${userInfo.handle}`}
+          target="_blank"
+          style={{ color: 'black', fontSize: '18px' }}
+        >
+          <Icon name="external alternate" />
+        </a>
       </Header>
-      <Loader inverted={true} active={isUpdatingRating} />
       {(() => {
         if (account?.id === urlParams.id) {
           return (
@@ -213,7 +229,14 @@ const ProfilePage: React.FC = () => {
                 <Table.Cell>
                   {dateStringFromSeconds(record.startTime)}
                 </Table.Cell>
-                <Table.Cell>{record.contestName}</Table.Cell>
+                <Table.Cell>
+                  <a
+                    href={`https://codeforces.com/contest/${record.contestID}`}
+                    target="_blank"
+                  >
+                    {record.contestName}
+                  </a>
+                </Table.Cell>
                 <Table.Cell>{record.rank}</Table.Cell>
                 <Table.Cell style={getRatingColorStyle(performance)}>
                   {performance}

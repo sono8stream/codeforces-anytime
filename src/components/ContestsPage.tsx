@@ -71,7 +71,11 @@ const ContestsPage: React.FC = () => {
               >
                 <Table.Cell>
                   <a
-                    href={`https://codeforces.com/contestRegistration/${info.id}/virtual/true`}
+                    href={
+                      virtualRanks[info.id] || officialRanks[info.id]
+                        ? `https://codeforces.com/contestRegistration/${info.id}`
+                        : `https://codeforces.com/contestRegistration/${info.id}/virtual/true`
+                    }
                     target="blank"
                   >
                     {info.name}
