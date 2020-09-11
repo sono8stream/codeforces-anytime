@@ -18,7 +18,7 @@ const RankingPage: React.FC = () => {
 
   return (
     <>
-      <Header as="h2" content="ランキング" />
+      <Header as="h2" content="Ranking" />
       <Table celled={true}>
         <Table.Header>
           <Table.Row>

@@ -50,7 +50,7 @@ const ContestsPage: React.FC = () => {
 
   return (
     <>
-      <Header as="h2" content="対応中のコンテスト" />
+      <Header as="h2" content="Supported contests" />
       <Table celled={true}>
         <Table.Header>
           <Table.Row>
