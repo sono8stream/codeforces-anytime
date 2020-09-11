@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { Link, useHistory, useParams } from 'react-router-dom';
+import { Link, useHistory, useParams, useLocation } from 'react-router-dom';
 import {
   CartesianGrid,
   ResponsiveContainer,
@@ -17,6 +17,8 @@ import {
   Segment,
   Table,
   Icon,
+  Modal,
+  Container,
   Grid,
 } from 'semantic-ui-react';
 import { fetchProfile, updateContestRecords, fetchUsers } from '../actions';
@@ -33,16 +35,28 @@ import getRatingColorStyle, {
 } from '../utils/getRatingColorStyle';
 import { calculateTimeTick } from '../utils/graphUtilities';
 import UserProfile from '../types/userProfile';
+import { getCertificate } from '../utils/getCertificate';
+import { getTwitterMessage } from '../utils/getTwitterMessage';
 
 const ProfilePage: React.FC = () => {
   const history = useHistory();
   const urlParams = useParams<{ id: string }>();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
 
   const dispatch = useDispatch();
   const account = useAccountInfo();
   const users = useUsers();
   const profile = useProfile();
   const isUpdatingRating = useIsUpdatingRating();
+
+  const [certIdx, setCertIdx] = useState(-1);
+
+  useEffect(() => {
+    if (queryParams.get('cert')) {
+      setCertIdx(Number(queryParams.get('cert')));
+    }
+  }, []);
 
   useEffect(() => {
     if (!account.id || account.id !== urlParams.id) {
@@ -88,6 +102,14 @@ const ProfilePage: React.FC = () => {
   let userInfo = users[urlParams.id];
   if (profile.records.length > 0 && account?.id === urlParams.id) {
     userInfo = profile;
+  }
+
+  let certificate = null;
+  if (userInfo.records[userInfo.records.length - certIdx - 1]) {
+    certificate = getCertificate(
+      userInfo,
+      userInfo.records.length - certIdx - 1
+    );
   }
 
   const data = userInfo.records
@@ -205,24 +227,13 @@ const ProfilePage: React.FC = () => {
             <Table.HeaderCell>Perf.</Table.HeaderCell>
             <Table.HeaderCell>Rating</Table.HeaderCell>
             <Table.HeaderCell>Delta</Table.HeaderCell>
+            <Table.HeaderCell>Cert.</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
 
         <Table.Body>
           {userInfo.records.map((record, idx) => {
-            let delta;
-            let performance;
-            if (idx === userInfo.records.length - 1) {
-              delta = '-';
-              performance = 0;
-            } else {
-              if (record.newRating > record.oldRating) {
-                delta = '+' + (record.newRating - record.oldRating).toString();
-              } else {
-                delta = record.newRating - record.oldRating;
-              }
-              performance = 2 * record.newRating - record.oldRating;
-            }
+            const cert = getCertificate(userInfo, idx);
 
             return (
               <Table.Row key={record.startTime}>
@@ -238,18 +249,111 @@ const ProfilePage: React.FC = () => {
                   </a>
                 </Table.Cell>
                 <Table.Cell>{record.rank}</Table.Cell>
-                <Table.Cell style={getRatingColorStyle(performance)}>
-                  {performance}
+                <Table.Cell style={getRatingColorStyle(cert.performance)}>
+                  {cert.performance}
                 </Table.Cell>
                 <Table.Cell style={getRatingColorStyle(record.newRating)}>
                   {record.newRating}
                 </Table.Cell>
-                <Table.Cell>{delta}</Table.Cell>
+                <Table.Cell>{cert.deltaString}</Table.Cell>
+                <Table.Cell>
+                  <div
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => {
+                      console.log(idx);
+                      setCertIdx(userInfo.records.length - idx - 1);
+                    }}
+                  >
+                    <Icon name="file outline" />
+                  </div>
+                </Table.Cell>
               </Table.Row>
             );
           })}
         </Table.Body>
       </Table>
+
+      <Modal
+        open={certIdx >= 0 && !!userInfo.records[certIdx]}
+        onClose={() => setCertIdx(-1)}
+      >
+        {certificate ? (
+          <>
+            <Modal.Header>
+              <Icon name="certificate" color="yellow" />
+              Contest Result
+            </Modal.Header>
+            <Modal.Content>
+              <Container text={true}>
+                <Grid style={{ fontWeight: 'bold' }}>
+                  <Grid.Row>
+                    <Grid.Column width={3}>User</Grid.Column>
+                    <Grid.Column width={13}>
+                      <span style={getRatingColorStyle(certificate.newRating)}>
+                        {userInfo.handle}
+                      </span>
+                    </Grid.Column>
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Grid.Column width={3}>Contest</Grid.Column>
+                    <Grid.Column width={13}>
+                      {certificate.contestName}
+                    </Grid.Column>
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Grid.Column width={3}>Rank</Grid.Column>
+                    <Grid.Column>{certificate.rankString}</Grid.Column>
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Grid.Column width={3}>Performance</Grid.Column>
+                    <Grid.Column>
+                      <span
+                        style={getRatingColorStyle(certificate.performance)}
+                      >
+                        {certificate.performance}
+                      </span>
+                    </Grid.Column>
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Grid.Column width={3}>Change</Grid.Column>
+                    <Grid.Column width={13}>
+                      <span style={getRatingColorStyle(certificate.oldRating)}>
+                        {certificate.oldRating}
+                      </span>
+                      &nbsp;→&nbsp;
+                      <span style={getRatingColorStyle(certificate.newRating)}>
+                        {certificate.newRating}
+                      </span>
+                      &nbsp; ({certificate.deltaString}) &nbsp;
+                      <span style={{ color: 'red' }}>
+                        {certificate.isHighest ? 'Highest!' : ''}
+                      </span>
+                    </Grid.Column>
+                  </Grid.Row>
+                </Grid>
+              </Container>
+            </Modal.Content>
+            <Modal.Actions>
+              <Button
+                color="twitter"
+                circular={true}
+                content="Tweet"
+                icon="twitter"
+                as="a"
+                href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
+                  getTwitterMessage(urlParams.id, certificate, certIdx)
+                )}`}
+                target="_blank"
+              />
+              <script
+                async={true}
+                src="https://platform.twitter.com/widgets.js"
+              />
+              <Button content="閉じる" onClick={() => setCertIdx(-1)} />
+            </Modal.Actions>
+          </>
+        ) : null}
+      </Modal>
     </>
   );
 };
