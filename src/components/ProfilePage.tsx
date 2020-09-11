@@ -260,7 +260,6 @@ const ProfilePage: React.FC = () => {
                   <div
                     style={{ cursor: 'pointer' }}
                     onClick={() => {
-                      console.log(idx);
                       setCertIdx(userInfo.records.length - idx - 1);
                     }}
                   >

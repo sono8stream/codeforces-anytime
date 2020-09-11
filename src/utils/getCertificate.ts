@@ -35,12 +35,16 @@ export const getCertificate = (profile: UserProfile, idx: number) => {
       rankString = record.rank + 'th';
   }
 
-  const isHighest =
-    profile.records
-      .map((rec) => rec.newRating)
-      .reduce((prev, current, i) =>
-        i >= idx ? Math.max(prev, current) : prev
-      ) === record.newRating;
+  let isHighest = false;
+  if (idx + 1 < profile.records.length) {
+    isHighest = true;
+    for (let i = idx + 1; i < profile.records.length; i++) {
+      if (record.newRating <= profile.records[i].newRating) {
+        isHighest = false;
+        break;
+      }
+    }
+  }
 
   return {
     handle: profile.handle,
