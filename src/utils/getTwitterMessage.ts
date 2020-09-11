@@ -32,7 +32,7 @@ Updated highest rating!`
           : ''
       }
 #CodeforcesAnytime
-https://codeforces-anytime.sonoapp.page/users/${id}?cert=${idx}`;
+https://codeforces-anytime.sonoapp.page/users/${id}?cert=${idx}&lang=en`;
     } else {
       return `[バーチャル参加]
 ${certificate.handle}さんの${
