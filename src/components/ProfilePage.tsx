@@ -350,15 +350,12 @@ const ProfilePage: React.FC = () => {
                 )}`}
                 target="_blank"
               />
-              <script
-                async={true}
-                src="https://platform.twitter.com/widgets.js"
-              />
               <Button content="閉じる" onClick={() => setCertIdx(-1)} />
             </Modal.Actions>
           </>
         ) : null}
       </Modal>
+      <script async={true} src="https://platform.twitter.com/widgets.js" />
     </>
   );
 };
