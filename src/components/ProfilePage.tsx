@@ -56,7 +56,7 @@ const ProfilePage: React.FC = () => {
     if (queryParams.get('cert')) {
       setCertIdx(Number(queryParams.get('cert')));
     }
-  }, []);
+  }, [queryParams]);
 
   useEffect(() => {
     if (!account.id || account.id !== urlParams.id) {
@@ -141,6 +141,7 @@ const ProfilePage: React.FC = () => {
         <a
           href={`https://codeforces.com/profile/${userInfo.handle}`}
           target="_blank"
+          rel="noopener noreferrer"
           style={{ color: 'black', fontSize: '18px' }}
         >
           <Icon name="external alternate" />
@@ -245,12 +246,9 @@ const ProfilePage: React.FC = () => {
                     record.contestName
                   ) : (
                     <a
-                      href={
-                        record.contestID === 0
-                          ? undefined
-                          : `https://codeforces.com/contest/${record.contestID}`
-                      }
+                      href={`https://codeforces.com/contest/${record.contestID}`}
                       target="_blank"
+                      rel="noopener noreferrer"
                     >
                       {record.contestName}
                     </a>

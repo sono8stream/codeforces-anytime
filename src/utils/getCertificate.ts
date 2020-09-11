@@ -1,4 +1,3 @@
-import ContestRecord from '../types/contestRecord';
 import ContestCertificate from '../types/contestCertificate';
 import UserProfile from '../types/userProfile';
 
