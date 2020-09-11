@@ -1,6 +1,6 @@
 {
-  "name": "react-sono-template",
-  "version": "0.1.0",
+  "name": "codeforces-anytime",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
     "firebase": "^7.15.5",
