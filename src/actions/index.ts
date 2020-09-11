@@ -68,6 +68,7 @@ export const updateContestRecords = (
   const userID = getState().account.id;
   const { handle, lastUpdateTime } = getState().profile;
   const storeRef = firebase.firestore().collection('users').doc(userID);
+  let oldRating = getState().profile.rating;
   try {
     const contests = await getParticipateVirtuals(handle, lastUpdateTime);
     const nowTime = Math.floor(new Date().getTime() / 1000);
@@ -83,13 +84,12 @@ export const updateContestRecords = (
           startTime: contest.startTimeSeconds,
           nowTime,
         });
-        const oldRating = getState().profile.rating;
         const nextRating = await calculateMyRating({
           contestID: contest.id,
           handle,
           rank: myRank,
           rating: oldRating,
-        }).catch((error) => null);
+        }).catch((e) => null);
         if (nextRating == null) {
           continue;
         }
@@ -116,6 +116,7 @@ export const updateContestRecords = (
             { merge: true }
           );
           dispatch(addContestRecordAction(newRecord));
+          oldRating = nextRating;
         }
       } catch (e) {
         continue;
