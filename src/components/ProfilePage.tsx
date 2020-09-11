@@ -55,8 +55,9 @@ const ProfilePage: React.FC = () => {
   useEffect(() => {
     if (queryParams.get('cert')) {
       setCertIdx(Number(queryParams.get('cert')));
+      console.log('a');
     }
-  }, [queryParams]);
+  }, []);
 
   useEffect(() => {
     if (!account.id || account.id !== urlParams.id) {
@@ -105,7 +106,7 @@ const ProfilePage: React.FC = () => {
   }
 
   let certificate = null;
-  if (userInfo.records[userInfo.records.length - certIdx - 1]) {
+  if (certIdx >= 0 && userInfo.records[userInfo.records.length - certIdx - 1]) {
     certificate = getCertificate(
       userInfo,
       userInfo.records.length - certIdx - 1
@@ -278,10 +279,7 @@ const ProfilePage: React.FC = () => {
         </Table.Body>
       </Table>
 
-      <Modal
-        open={certIdx >= 0 && !!userInfo.records[certIdx]}
-        onClose={() => setCertIdx(-1)}
-      >
+      <Modal open={!!certificate} onClose={() => setCertIdx(-1)}>
         {certificate ? (
           <>
             <Modal.Header>
