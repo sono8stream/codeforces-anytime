@@ -241,12 +241,20 @@ const ProfilePage: React.FC = () => {
                   {dateStringFromSeconds(record.startTime)}
                 </Table.Cell>
                 <Table.Cell>
-                  <a
-                    href={`https://codeforces.com/contest/${record.contestID}`}
-                    target="_blank"
-                  >
-                    {record.contestName}
-                  </a>
+                  {record.contestID === 0 ? (
+                    record.contestName
+                  ) : (
+                    <a
+                      href={
+                        record.contestID === 0
+                          ? undefined
+                          : `https://codeforces.com/contest/${record.contestID}`
+                      }
+                      target="_blank"
+                    >
+                      {record.contestName}
+                    </a>
+                  )}
                 </Table.Cell>
                 <Table.Cell>{record.rank}</Table.Cell>
                 <Table.Cell style={getRatingColorStyle(cert.performance)}>
