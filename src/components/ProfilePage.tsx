@@ -51,11 +51,14 @@ const ProfilePage: React.FC = () => {
   const isUpdatingRating = useIsUpdatingRating();
 
   const [certIdx, setCertIdx] = useState(-1);
+  const [isEnglish, setIsEnglish] = useState(false);
 
   useEffect(() => {
     if (queryParams.get('cert')) {
       setCertIdx(Number(queryParams.get('cert')));
-      console.log('a');
+    }
+    if (queryParams.get('lang')) {
+      setIsEnglish(queryParams.get('lang') === 'en');
     }
   }, []);
 
@@ -284,31 +287,64 @@ const ProfilePage: React.FC = () => {
           <>
             <Modal.Header>
               <Icon name="certificate" color="yellow" />
-              Contest Result
+              {isEnglish ? <>Contest Result</> : <>コンテスト成績表</>}
+              <Button.Group floated="right">
+                <Button
+                  compact={true}
+                  positive={!isEnglish}
+                  onClick={() => {
+                    if (isEnglish) {
+                      setIsEnglish(false);
+                    }
+                  }}
+                >
+                  JP
+                </Button>
+                <Button.Or />
+                <Button
+                  compact={true}
+                  positive={isEnglish}
+                  onClick={() => {
+                    if (!isEnglish) {
+                      setIsEnglish(true);
+                    }
+                  }}
+                >
+                  EN
+                </Button>
+              </Button.Group>
             </Modal.Header>
             <Modal.Content>
               <Container text={true}>
                 <Grid style={{ fontWeight: 'bold' }}>
                   <Grid.Row>
-                    <Grid.Column width={3}>User</Grid.Column>
-                    <Grid.Column width={13}>
+                    <Grid.Column width={4}>
+                      {isEnglish ? <>User</> : <>ユーザー</>}
+                    </Grid.Column>
+                    <Grid.Column width={12}>
                       <span style={getRatingColorStyle(certificate.newRating)}>
                         {userInfo.handle}
                       </span>
                     </Grid.Column>
                   </Grid.Row>
                   <Grid.Row>
-                    <Grid.Column width={3}>Contest</Grid.Column>
-                    <Grid.Column width={13}>
+                    <Grid.Column width={4}>
+                      {isEnglish ? <>Contest</> : <>コンテスト</>}
+                    </Grid.Column>
+                    <Grid.Column width={12}>
                       {certificate.contestName}
                     </Grid.Column>
                   </Grid.Row>
                   <Grid.Row>
-                    <Grid.Column width={3}>Rank</Grid.Column>
+                    <Grid.Column width={4}>
+                      {isEnglish ? <>Rank</> : <>順位</>}
+                    </Grid.Column>
                     <Grid.Column>{certificate.rankString}</Grid.Column>
                   </Grid.Row>
                   <Grid.Row>
-                    <Grid.Column width={3}>Performance</Grid.Column>
+                    <Grid.Column width={4}>
+                      {isEnglish ? <>Performance</> : <>パフォーマンス</>}
+                    </Grid.Column>
                     <Grid.Column>
                       <span
                         style={getRatingColorStyle(certificate.performance)}
@@ -318,8 +354,10 @@ const ProfilePage: React.FC = () => {
                     </Grid.Column>
                   </Grid.Row>
                   <Grid.Row>
-                    <Grid.Column width={3}>Change</Grid.Column>
-                    <Grid.Column width={13}>
+                    <Grid.Column width={4}>
+                      {isEnglish ? <>Rating change</> : <>レート変動</>}
+                    </Grid.Column>
+                    <Grid.Column width={12}>
                       <span style={getRatingColorStyle(certificate.oldRating)}>
                         {certificate.oldRating}
                       </span>
@@ -344,7 +382,12 @@ const ProfilePage: React.FC = () => {
                 icon="twitter"
                 as="a"
                 href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
-                  getTwitterMessage(urlParams.id, certificate, certIdx)
+                  getTwitterMessage(
+                    urlParams.id,
+                    certificate,
+                    certIdx,
+                    isEnglish
+                  )
                 )}`}
                 target="_blank"
               />
