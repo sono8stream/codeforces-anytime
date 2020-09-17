@@ -1,19 +1,19 @@
+import { createBrowserHistory } from 'history';
 import React from 'react';
+import ReactGA from 'react-ga';
 import { Provider } from 'react-redux';
 import { Route, Router } from 'react-router';
 import { applyMiddleware, createStore } from 'redux';
 import thunk from 'redux-thunk';
 import Contact from './components/Contact';
+import ContestsPage from './components/ContestsPage';
 import PageWrapper from './components/PageWrapper';
 import ProfilePage from './components/ProfilePage';
+import RankingPage from './components/RankingPage';
 import StartPage from './components/StartPage';
 import UpdateProfilePage from './components/UpdateProfilePage';
-import { createBrowserHistory } from 'history';
-import rootReducer from './reducers';
-import ContestsPage from './components/ContestsPage';
-import RankingPage from './components/RankingPage';
-import ReactGA from 'react-ga';
 import { trackID } from './ga/config';
+import rootReducer from './reducers';
 
 const store = createStore(rootReducer, applyMiddleware(thunk));
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { Link, useHistory, useParams, useLocation } from 'react-router-dom';
+import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
 import {
   CartesianGrid,
   ResponsiveContainer,
@@ -12,31 +12,31 @@ import {
 } from 'recharts';
 import {
   Button,
-  Header,
-  Loader,
-  Segment,
-  Table,
-  Icon,
-  Modal,
   Container,
   Grid,
+  Header,
+  Icon,
+  Loader,
+  Modal,
+  Segment,
+  Table,
 } from 'semantic-ui-react';
-import { fetchProfile, updateContestRecords, fetchUsers } from '../actions';
+import { fetchProfile, fetchUsers, updateContestRecords } from '../actions';
 import {
   useAccountInfo,
-  useProfile,
   useIsUpdatingRating,
+  useProfile,
   useUsers,
 } from '../hooks';
+import UserProfile from '../types/userProfile';
 import { dateStringFromSeconds } from '../utils/dateString';
 import { monthStringFromTime } from '../utils/dateString';
+import { getCertificate } from '../utils/getCertificate';
 import getRatingColorStyle, {
   ratingColors,
 } from '../utils/getRatingColorStyle';
-import { calculateTimeTick } from '../utils/graphUtilities';
-import UserProfile from '../types/userProfile';
-import { getCertificate } from '../utils/getCertificate';
 import { getTwitterMessage } from '../utils/getTwitterMessage';
+import { calculateTimeTick } from '../utils/graphUtilities';
 
 const ProfilePage: React.FC = () => {
   const history = useHistory();
@@ -242,7 +242,7 @@ const ProfilePage: React.FC = () => {
 
             return (
               <Table.Row key={record.startTime}>
-                <Table.Cell>
+                <Table.Cell>performance
                   {dateStringFromSeconds(record.startTime)}
                 </Table.Cell>
                 <Table.Cell>
