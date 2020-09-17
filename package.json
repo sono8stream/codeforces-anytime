@@ -24,6 +24,7 @@
     "start:production": "cross-env REACT_APP_ENV=production react-scripts start",
     "build:develop": "cross-env REACT_APP_ENV=develop react-scripts build",
     "build:production": "cross-env REACT_APP_ENV=production react-scripts build",
+    "deploy": "cross-env REACT_APP_ENV=production react-scripts build && firebase deploy",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

@@ -242,7 +242,7 @@ const ProfilePage: React.FC = () => {
 
             return (
               <Table.Row key={record.startTime}>
-                <Table.Cell>performance
+                <Table.Cell>
                   {dateStringFromSeconds(record.startTime)}
                 </Table.Cell>
                 <Table.Cell>
