@@ -30,7 +30,8 @@ export const calculateMyRating = async (
   if (contestants.length === 0) {
     throw new Error();
   }
-  contestants.splice(contestData.rank - 1, 0, {
+  const index = contestData.rank;
+  contestants.splice(index, 0, {
     handle: contestData.handle,
     rank: contestData.rank,
     oldRating: contestData.rating,
@@ -46,13 +47,6 @@ export const calculateMyRating = async (
   calcBaseRatingDeltas();
   calcAllAverageRatingInc();
   calcMajorAverageRatingInc();
-  let index = 0;
-  for (let i = 0; i < contestants.length; i++) {
-    if (contestants[i].handle === contestData.handle) {
-      index = i;
-      break;
-    }
-  }
   return contestants[index].oldRating + contestants[index].calcedDelta;
 };
 
@@ -153,6 +147,20 @@ const calcRatingToRank = (targetRank: number, oldRating: number): number => {
       ratingToSeeds[mid] - loseProbabilities[mid][oldRating + baseRating] <
       targetRank
     ) {
+      top = mid;
+    } else {
+      bottom = mid;
+    }
+  }
+  return Math.max(bottom - baseRating, 1);
+};
+
+const calcPerformance = (rank: number) => {
+  let bottom = 0;
+  let top = ratingRange + 1;
+  while (bottom + 1.1 < top) {
+    const mid = Math.trunc((bottom + top) / 2);
+    if (ratingToSeeds[mid] < rank) {
       top = mid;
     } else {
       bottom = mid;
