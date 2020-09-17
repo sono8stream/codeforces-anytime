@@ -1,17 +1,17 @@
 import React, { useEffect } from 'react';
-import { Header, Table } from 'semantic-ui-react';
 import { useDispatch } from 'react-redux';
+import { Header, Table } from 'semantic-ui-react';
 import {
-  useAccountInfo,
-  useProfile,
-  useAvailableContests,
-  useOfficialRatingRecords,
-} from '../hooks';
-import {
-  fetchProfile,
   fetchAvailableContestInfo,
   fetchOfficialRatingRecords,
+  fetchProfile,
 } from '../actions';
+import {
+  useAccountInfo,
+  useAvailableContests,
+  useOfficialRatingRecords,
+  useProfile,
+} from '../hooks';
 
 const ContestsPage: React.FC = () => {
   const dispatch = useDispatch();
