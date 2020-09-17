@@ -17,7 +17,7 @@ export const getCertificate = (profile: UserProfile, idx: number) => {
   }
 
   const performance =
-    record.contestID === 0 ? 0 : 4 * record.newRating - record.oldRating;
+    record.contestID === 0 ? 0 : 4 * record.newRating - 3 * record.oldRating;
 
   let rankString;
   switch (record.rank % 10) {
