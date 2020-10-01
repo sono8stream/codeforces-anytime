@@ -2,6 +2,7 @@
   "name": "codeforces-anytime",
   "version": "1.0.0",
   "private": true,
+  "homepage": "https://codeforces-anytime.sonoapp.page",
   "dependencies": {
     "firebase": "^7.15.5",
     "react": "^16.13.1",

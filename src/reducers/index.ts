@@ -8,7 +8,6 @@ import {
   fetchProfileActions,
   fetchUsersActions,
   logoutActions,
-  updateContestRecords,
   updateContestRecordsActions,
   updateProfileActions,
 } from '../actions';
