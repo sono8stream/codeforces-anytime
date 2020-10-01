@@ -3,19 +3,20 @@ import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import {
   addContestRecordAction,
   changeAccountInfo,
-  fetchProfileActions,
-  logoutActions,
-  updateContestRecordsActions,
-  updateProfileActions,
   fetchAvailableContestInfoActions,
   fetchOfficialRatingRecordsActions,
+  fetchProfileActions,
   fetchUsersActions,
+  logoutActions,
+  updateContestRecords,
+  updateContestRecordsActions,
+  updateProfileActions,
 } from '../actions';
 import AccountInfo from '../types/accountInfo';
-import UserProfile from '../types/userProfile';
-import RootState from '../types/rootState';
 import AvailableContestInfo from '../types/availableContestInfo';
 import ContestRecord from '../types/contestRecord';
+import RootState from '../types/rootState';
+import UserProfile from '../types/userProfile';
 
 const profileReducer = reducerWithInitialState<UserProfile>({
   handle: '',
@@ -27,8 +28,9 @@ const profileReducer = reducerWithInitialState<UserProfile>({
   .case(updateProfileActions.done, (prev, payload) => payload.result)
   .case(fetchProfileActions.done, (prev, payload) => payload.result)
   .case(addContestRecordAction, (prev, payload) => {
-    const contestRecord = [payload, ...prev.records];
-    return { ...prev, records: contestRecord };
+    const records = [payload.record, ...prev.records];
+    const rating = payload.record.newRating;
+    return { ...prev, rating, records };
   })
   .case(updateContestRecordsActions.done, (prev, payload) => ({
     ...prev,
@@ -72,9 +74,17 @@ const accountReducer = reducerWithInitialState<AccountInfo>({
     id: '',
   }));
 
-const usersReducer = reducerWithInitialState<{ [id: string]: UserProfile }>(
-  {}
-).case(fetchUsersActions.done, (prev, payload) => payload.result);
+const usersReducer = reducerWithInitialState<{ [id: string]: UserProfile }>({})
+  .case(fetchUsersActions.done, (prev, payload) => payload.result)
+  .case(updateProfileActions.done, (prev, payload) => {
+    return { ...prev, [payload.params.id]: payload.result };
+  })
+  .case(addContestRecordAction, (prev, payload) => {
+    const profile = prev[payload.id];
+    profile.records = [payload.record, ...profile.records];
+    profile.rating = payload.record.newRating;
+    return { ...prev, [payload.id]: profile };
+  });
 
 const rootReducer = combineReducers<RootState>({
   profile: profileReducer,
