@@ -238,11 +238,14 @@ const StartPage: React.FC = () => {
           </List.Item>
           <List.Item>
             {isEnglish ? (
-              <>To be ranked, you have to join at least one virtual contest</>
+              <>
+                To be ranked, you have to join at least one virtual contest and
+                update your rating
+              </>
             ) : (
               <>
                 ランキングに掲載されるには，Virtual
-                Contestの結果を1回以上反映させる必要があります
+                Contestの結果を1つ以上反映させる必要があります
               </>
             )}
           </List.Item>
