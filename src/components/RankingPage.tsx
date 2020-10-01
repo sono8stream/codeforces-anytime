@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { Header, Table } from 'semantic-ui-react';
 import { fetchUsers } from '../actions';
 import { useUsers } from '../hooks';
 import getRatingColorStyle from '../utils/getRatingColorStyle';
-import { Link } from 'react-router-dom';
 
 const RankingPage: React.FC = () => {
   const dispatch = useDispatch();
@@ -19,7 +19,7 @@ const RankingPage: React.FC = () => {
   return (
     <>
       <Header as="h2" content="Ranking" />
-      <Table celled={true}>
+      <Table unstackable={true} celled={true}>
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell>Rank</Table.HeaderCell>
