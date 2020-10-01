@@ -223,7 +223,7 @@ const ProfilePage: React.FC = () => {
           <Scatter name="A school" data={data} line={true} fill="white" />
         </ScatterChart>
       </ResponsiveContainer>
-      <Table celled={true}>
+      <Table unstackable={true} celled={true}>
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell>Date</Table.HeaderCell>

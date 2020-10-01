@@ -51,7 +51,7 @@ const ContestsPage: React.FC = () => {
   return (
     <>
       <Header as="h2" content="Supported contests" />
-      <Table celled={true}>
+      <Table unstackable={true} celled={true}>
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell>Contest</Table.HeaderCell>

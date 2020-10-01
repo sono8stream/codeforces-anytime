@@ -1,10 +1,10 @@
-import React, { useCallback, useState, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { Link, useHistory, useLocation } from 'react-router-dom';
 import { Button, Header, Icon, List, Loader, Segment } from 'semantic-ui-react';
 import { login } from '../actions';
 import firebase from '../firebase';
 import { useAccountInfo } from '../hooks';
-import { Link, useHistory, useLocation } from 'react-router-dom';
 
 const StartPage: React.FC = () => {
   const history = useHistory();
@@ -125,6 +125,14 @@ const StartPage: React.FC = () => {
         </List.Item>
         <List.Item>
           {isEnglish ? (
+            <>Create user by specifying your user name in Codeforces</>
+          ) : (
+            <>Codeforcesのユーザー名を指定してユーザー登録</>
+          )}
+        </List.Item>
+
+        <List.Item>
+          {isEnglish ? (
             <>
               Enter a{' '}
               <a href="https://codeforces.com" target="blank">
@@ -212,6 +220,32 @@ const StartPage: React.FC = () => {
             ) : (
               <>
                 レート更新処理では，1コンテストあたり30秒前後の計算時間が発生します
+              </>
+            )}
+          </List.Item>
+          <List.Item>
+            {isEnglish ? (
+              <>
+                Virtual contests that you joined before creating user in this
+                service is not rated.
+              </>
+            ) : (
+              <>
+                このサービスでユーザー登録するよりも前に参加したVirtual
+                Contestの結果は無効です
+              </>
+            )}
+          </List.Item>
+          <List.Item>
+            {isEnglish ? (
+              <>
+                To be ranked, you have to join at least one virtual contest and
+                update your rating
+              </>
+            ) : (
+              <>
+                ランキングに掲載されるには，Virtual
+                Contestの結果を1つ以上反映させる必要があります
               </>
             )}
           </List.Item>

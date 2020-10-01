@@ -1,24 +1,26 @@
 import { Dispatch } from 'redux';
 import actionCreatorFactory from 'typescript-fsa';
+import { fetchAvailableContestInfoAPI } from '../api/availableContestInfo';
+import { fetchOfficialRatingRecordsAPI } from '../api/fetchOfficialRatingRecords';
+import { fetchUsersAPI } from '../api/fetchUsers';
 import { fetchProfileAPI } from '../api/userProfile';
 import firebase from '../firebase';
 import AccountInfo from '../types/accountInfo';
+import AvailableContestInfo from '../types/availableContestInfo';
 import ContestRecord from '../types/contestRecord';
 import RootState from '../types/rootState';
 import UserProfile from '../types/userProfile';
 import { calculateMyRating } from '../utils/calculateMyRating';
 import { calculateVirtualRank } from '../utils/calculateVirtualRank';
 import { getParticipateVirtuals } from '../utils/getParticipateVirtuals';
-import AvailableContestInfo from '../types/availableContestInfo';
-import { fetchAvailableContestInfoAPI } from '../api/availableContestInfo';
-import { fetchOfficialRatingRecordsAPI } from '../api/fetchOfficialRatingRecords';
-import { fetchUsersAPI } from '../api/fetchUsers';
 
 const actionCreator = actionCreatorFactory();
 
-export const updateProfileActions = actionCreator.async<{}, UserProfile, {}>(
-  'CreateProfile'
-);
+export const updateProfileActions = actionCreator.async<
+  { id: string },
+  UserProfile,
+  {}
+>('CreateProfile');
 
 export const updateProfile = (
   userID: string,
@@ -27,19 +29,23 @@ export const updateProfile = (
   onDone?: () => void,
   onFailed?: () => void
 ) => async (dispatch: Dispatch) => {
-  updateProfileActions.started({});
+  dispatch(updateProfileActions.started({ id: userID }));
   if (onStart) {
     onStart();
   }
   try {
     const storeRef = firebase.firestore().collection('users').doc(userID);
     await storeRef.set(profile, { merge: true });
-    updateProfileActions.done({ params: {}, result: profile });
+    dispatch(
+      updateProfileActions.done({ params: { id: userID }, result: profile })
+    );
     if (onDone) {
       onDone();
     }
   } catch (e) {
-    updateProfileActions.failed({ params: {}, error: {} });
+    dispatch(
+      updateProfileActions.failed({ params: { id: userID }, error: {} })
+    );
     if (onFailed) {
       onFailed();
     }
@@ -52,9 +58,10 @@ export const updateContestRecordsActions = actionCreator.async<
   { value: Error }
 >('UpdateContestRecord');
 
-export const addContestRecordAction = actionCreator<ContestRecord>(
-  'AddContestRecord'
-);
+export const addContestRecordAction = actionCreator<{
+  id: string;
+  record: ContestRecord;
+}>('AddContestRecord');
 
 export const updateContestRecords = (
   onStart?: () => void,
@@ -115,7 +122,7 @@ export const updateContestRecords = (
             },
             { merge: true }
           );
-          dispatch(addContestRecordAction(newRecord));
+          dispatch(addContestRecordAction({ id: userID, record: newRecord }));
           oldRating = nextRating;
         }
       } catch (e) {
