@@ -153,7 +153,7 @@ const StartPage: React.FC = () => {
           {isEnglish ? (
             <>Update your rating on this service's profile page</>
           ) : (
-            <>page.このサービスのプロフィールページでレート更新</>
+            <>このサービスのプロフィールページでレート更新</>
           )}
         </List.Item>
       </List>
