@@ -163,7 +163,7 @@ const calcRatingToRank = (targetRank: number, oldRating: number): number => {
 const calcPerformance = (rank: number, correctedDelta: number) => {
   let bottom = 0;
   let top = ratingRange + 1;
-  // レート変動が-correctedDelta以上となる最大のパフォーマンスを求める
+  // レート変動が-correctedDelta以上となる最大のレートを求める
   while (bottom + 1.1 < top) {
     const mid = Math.trunc((bottom + top) / 2);
     const rating = mid - baseRating;
