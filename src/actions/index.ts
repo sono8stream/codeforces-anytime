@@ -91,13 +91,15 @@ export const updateContestRecords = (
           startTime: contest.startTimeSeconds,
           nowTime,
         });
-        const nextRating = await calculateMyRating({
+        const { nextRating, performance } = await calculateMyRating({
           contestID: contest.id,
           handle,
           rank: myRank,
           rating: oldRating,
-        }).catch((e) => null);
-        if (nextRating == null) {
+        }).catch((e) => {
+          return { nextRating: null, performance: null };
+        });
+        if (nextRating == null || performance == null) {
           continue;
         }
 
@@ -108,6 +110,7 @@ export const updateContestRecords = (
           rank: myRank,
           newRating: nextRating,
           oldRating,
+          performance,
         };
 
         updateTime = Math.max(updateTime, endTime);

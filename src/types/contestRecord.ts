@@ -5,4 +5,5 @@ export default interface ContestRecord {
   newRating: number;
   rank: number;
   startTime: number;
+  performance: number;
 }
