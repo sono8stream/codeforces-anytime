@@ -59,6 +59,7 @@ const UpdateProfilePage: React.FC = () => {
           newRating: rating,
           rank: 1,
           startTime: time,
+          performance: 0,
         },
       ],
       registrationTime: time,

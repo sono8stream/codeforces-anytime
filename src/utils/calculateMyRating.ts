@@ -23,7 +23,7 @@ let ratingToSeeds: number[];
 
 export const calculateMyRating = async (
   contestData: ContestData
-): Promise<number> => {
+): Promise<{ nextRating: number; performance: number }> => {
   await fetchContestants(contestData.contestID).catch((err) => {
     throw err;
   });
@@ -45,9 +45,13 @@ export const calculateMyRating = async (
   calcRatingToSeeds();
   calcContestantSeeds(); // 少し時間かかる
   calcBaseRatingDeltas();
-  calcAllAverageRatingInc();
-  calcMajorAverageRatingInc();
-  return contestants[index].oldRating + contestants[index].calcedDelta;
+  let correctedDelta = calcAllAverageRatingInc();
+  correctedDelta += calcMajorAverageRatingInc();
+
+  const performance = calcPerformance(contestants[index].rank, correctedDelta);
+  const nextRating =
+    contestants[index].oldRating + contestants[index].calcedDelta;
+  return { nextRating, performance };
 };
 
 const fetchContestants = async (contestID: number) => {
@@ -155,18 +159,26 @@ const calcRatingToRank = (targetRank: number, oldRating: number): number => {
   return Math.max(bottom - baseRating, 1);
 };
 
-const calcPerformance = (rank: number) => {
+// ある順位に対し，補正込みのレート変動が0となるレートをパフォーマンスと定義する
+const calcPerformance = (rank: number, correctedDelta: number) => {
   let bottom = 0;
   let top = ratingRange + 1;
+  // レート変動が-correctedDelta以上となる最大のレートを求める
   while (bottom + 1.1 < top) {
     const mid = Math.trunc((bottom + top) / 2);
-    if (ratingToSeeds[mid] < rank) {
+    const rating = mid - baseRating;
+    const seed = ratingToSeeds[mid];
+    const midRank = Math.sqrt(rank * seed);
+
+    const targetRating = calcRatingToRank(midRank, rating);
+    const delta = Math.trunc((targetRating - rating) / 2);
+    if (delta < -correctedDelta) {
       top = mid;
     } else {
       bottom = mid;
     }
   }
-  return Math.max(bottom - baseRating, 1);
+  return bottom - baseRating;
 };
 
 const calcEloLoseProbability = (myRate: number, othersRate: number): number => {
@@ -182,6 +194,7 @@ const calcAllAverageRatingInc = () => {
   for (const contestant of contestants) {
     contestant.calcedDelta += inc;
   }
+  return inc;
 };
 
 const calcMajorAverageRatingInc = () => {
@@ -204,4 +217,6 @@ const calcMajorAverageRatingInc = () => {
   for (const contestant of contestants) {
     contestant.calcedDelta += inc;
   }
+
+  return inc;
 };
