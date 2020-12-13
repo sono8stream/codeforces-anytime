@@ -24,12 +24,14 @@ let ratingToSeeds: number[];
 export const calculateMyRating = async (
   contestData: ContestData
 ): Promise<{ nextRating: number; performance: number }> => {
+  contestants = new Array<Contestant>();
   await fetchContestants(contestData.contestID).catch((err) => {
     throw err;
   });
   if (contestants.length === 0) {
     throw new Error();
   }
+
   const index = contestData.rank;
   contestants.splice(index, 0, {
     handle: contestData.handle,
@@ -65,7 +67,6 @@ const fetchContestants = async (contestID: number) => {
   const json: any = await response.json();
   const results: any[] = json.result;
 
-  contestants = new Array<Contestant>();
   for (const result of results) {
     contestants.push({
       handle: result.handle,
