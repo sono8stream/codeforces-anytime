@@ -39,6 +39,14 @@ commands:
           key: v1-dependencies-{{ checksum "functions/package-lock.json" }}
           paths:
             - functions/node_modules
+  inject_dependecies:
+    steps:
+      - run:
+          name: Add Google Analytics ID
+          command: echo "export const trackID = '$GOOGLE_ANALYTICS_TRACK_ID';" > src/ga/config.ts
+      - run:
+          name: Add Firebase configs
+          command: echo "import firebase from 'firebase/app'; import 'firebase/auth'; import 'firebase/firestore'; $FIREBASE_CONFIG firebase.initializeApp(firebaseConfig); export default firebase;" > src/firebase/index.ts
 
 jobs:
   build:
@@ -66,6 +74,7 @@ jobs:
       - checkout
       - npm_install
       - functions_npm_install
+      - inject_dependencies
       - run:
           name: Build Project
           command: CI=false npm run build:production
