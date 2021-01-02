@@ -17,6 +17,7 @@
     "redux-thunk": "^2.3.0",
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^0.88.2",
+    "styled-components": "^5.2.1",
     "typescript-fsa": "^3.0.0",
     "typescript-fsa-reducers": "^1.2.1"
   },
@@ -54,6 +55,7 @@
     "@types/react-router-dom": "^5.1.5",
     "@types/recharts": "^1.8.13",
     "@types/redux-thunk": "^2.1.0",
+    "@types/styled-components": "^5.1.7",
     "prettier": "^2.0.5",
     "tslint": "^6.1.2",
     "tslint-config-prettier": "^1.18.0",
