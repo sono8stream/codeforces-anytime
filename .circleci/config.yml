@@ -39,7 +39,7 @@ commands:
           key: v1-dependencies-{{ checksum "functions/package-lock.json" }}
           paths:
             - functions/node_modules
-  inject_dependecies:
+  inject_dependencies:
     steps:
       - run:
           name: Add Google Analytics ID
