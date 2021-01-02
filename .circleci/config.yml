@@ -42,14 +42,20 @@ commands:
   inject_dependencies:
     steps:
       - run:
+          name: Add Google Analytics ID dir
+          command: mkdir src/ga
+      - run:
           name: Add Google Analytics ID file
           command: touch src/ga/config.ts
       - run:
-          name: Add Firebase config file
-          command: touch src/firebase/index.ts
-      - run:
           name: Add Google Analytics ID
           command: echo "export const trackID = '$GOOGLE_ANALYTICS_TRACK_ID';" > src/ga/config.ts
+      - run:
+          name: Add Firebase config dir
+          command: mkdir src/firebase
+      - run:
+          name: Add Firebase config file
+          command: touch src/firebase/index.ts
       - run:
           name: Add Firebase configs
           command: echo "import firebase from 'firebase/app'; import 'firebase/auth'; import 'firebase/firestore'; $FIREBASE_CONFIG firebase.initializeApp(firebaseConfig); export default firebase;" > src/firebase/index.ts

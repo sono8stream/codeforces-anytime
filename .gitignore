@@ -24,10 +24,10 @@ yarn-error.log*
 
 # firebase
 /.firebase
-/src/firebase/*
+/src/firebase
 
 # migration
 /src/migrate
 
 # google analytics
-/src/ga/*
+/src/ga
