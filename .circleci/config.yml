@@ -45,17 +45,11 @@ commands:
           name: Add google analytics ID dir
           command: mkdir src/ga
       - run:
-          name: Add google analytics ID file
-          command: touch src/ga/config.ts
-      - run:
           name: Add google analytics ID
           command: echo "export const trackID = '$GOOGLE_ANALYTICS_TRACK_ID';" > src/ga/config.ts
       - run:
           name: Add firebase config dir
           command: mkdir src/firebase
-      - run:
-          name: Add firebase config file
-          command: touch src/firebase/index.ts
       - run:
           name: Add firebase config
           command: echo "import firebase from 'firebase/app'; import 'firebase/auth'; import 'firebase/firestore'; $FIREBASE_CONFIG firebase.initializeApp(firebaseConfig); export default firebase;" > src/firebase/index.ts
