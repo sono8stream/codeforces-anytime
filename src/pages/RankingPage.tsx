@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Header, Table } from 'semantic-ui-react';
 import { fetchUsers } from '../actions';
+import RatingColoredName from '../components/RatingColoredName';
 import { useUsers } from '../hooks';
 import getRatingColorStyle from '../utils/getRatingColorStyle';
 
@@ -67,11 +68,13 @@ const RankingPage: React.FC = () => {
                     <Link
                       to={`/users/${user.id}`}
                       style={{
-                        ...getRatingColorStyle(user.data.rating),
                         fontWeight: 'bold',
                       }}
                     >
-                      {user.data.handle}
+                      <RatingColoredName
+                        rating={user.data.rating}
+                        name={user.data.handle}
+                      />
                     </Link>
                   </Table.Cell>
                   <Table.Cell>{user.data.rating}</Table.Cell>

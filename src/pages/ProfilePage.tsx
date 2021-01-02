@@ -22,6 +22,7 @@ import {
   Table,
 } from 'semantic-ui-react';
 import { fetchProfile, fetchUsers, updateContestRecords } from '../actions';
+import RatingColoredName from '../components/RatingColoredName';
 import {
   useAccountInfo,
   useIsUpdatingRating,
@@ -139,8 +140,8 @@ const ProfilePage: React.FC = () => {
   return (
     <>
       <Loader inverted={true} active={isUpdatingRating} />
-      <Header as="h2" style={getRatingColorStyle(userInfo.rating)}>
-        {userInfo.handle}
+      <Header as="h2">
+        <RatingColoredName name={userInfo.handle} rating={userInfo.rating} />
         &nbsp;
         <a
           href={`https://codeforces.com/profile/${userInfo.handle}`}
