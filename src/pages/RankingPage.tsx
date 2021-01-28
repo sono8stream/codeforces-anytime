@@ -1,11 +1,10 @@
 import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Header, Table } from 'semantic-ui-react';
+import { Header, Loader, Table } from 'semantic-ui-react';
 import { fetchUsers } from '../actions';
 import RatingColoredName from '../components/RatingColoredName';
 import { useUsers } from '../hooks';
-import getRatingColorStyle from '../utils/getRatingColorStyle';
 
 const RankingPage: React.FC = () => {
   const dispatch = useDispatch();
@@ -85,6 +84,9 @@ const RankingPage: React.FC = () => {
           })()}
         </Table.Body>
       </Table>
+      {Object.keys(users).length === 0 ? (
+        <Loader active={true} inline="centered" />
+      ) : null}
     </>
   );
 };
