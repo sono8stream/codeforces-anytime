@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { Header, Table } from 'semantic-ui-react';
+import { Header, Loader, Table } from 'semantic-ui-react';
 import {
   fetchAvailableContestInfo,
   fetchOfficialRatingRecords,
@@ -85,6 +85,9 @@ const ContestsPage: React.FC = () => {
           })}
         </Table.Body>
       </Table>
+      {availableContests.length === 0 ? (
+        <Loader active={true} inline="centered" />
+      ) : null}
     </>
   );
 };

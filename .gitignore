@@ -31,3 +31,6 @@ yarn-error.log*
 
 # google analytics
 /src/ga
+
+# linter
+.eslintcache
