@@ -1,19 +1,32 @@
 import React, { useEffect } from 'react';
+import ReactGA from 'react-ga';
 import { useDispatch } from 'react-redux';
+import { useHistory, useLocation } from 'react-router';
 import { Button, Container, Divider, Menu, Segment } from 'semantic-ui-react';
 import { changeAccountInfo, logout } from '../actions';
 import firebase from '../firebase';
-import history from '../history';
 import { useAccountInfo } from '../hooks';
 
 const PageWrapper: React.FC<{ children: any }> = ({ children }) => {
+  const history = useHistory();
+  const location = useLocation();
+
   const dispatch = useDispatch();
   const account = useAccountInfo();
 
   useEffect(() => {
+    const { pathname } = location;
+    ReactGA.set({ page: pathname });
+    ReactGA.pageview(pathname);
+  }, [location]);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location]);
+
+  useEffect(() => {
     const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
       if (user === null || user.email === null) {
-        history.push('/');
         return;
       }
       dispatch(changeAccountInfo({ email: user.email, id: user.uid }));
@@ -21,7 +34,7 @@ const PageWrapper: React.FC<{ children: any }> = ({ children }) => {
     return () => {
       unsubscribe();
     };
-  }, [dispatch]);
+  }, [dispatch, history]);
 
   return (
     <div
@@ -40,17 +53,40 @@ const PageWrapper: React.FC<{ children: any }> = ({ children }) => {
         >
           Codeforces Anytime
         </Menu.Item>
+        <Menu.Item
+          onClick={() => {
+            history.push('/contests');
+          }}
+        >
+          Contests
+        </Menu.Item>
+        <Menu.Item
+          onClick={() => {
+            history.push('/ranking');
+          }}
+        >
+          Ranking
+        </Menu.Item>
         {(() => {
           if (account.id) {
             return (
-              <Menu.Item
-                position="right"
-                onClick={() => {
-                  dispatch(logout());
-                }}
-              >
-                Logout
-              </Menu.Item>
+              <>
+                <Menu.Item
+                  position="right"
+                  onClick={() => {
+                    history.push(`/users/${account.id}`);
+                  }}
+                >
+                  Profile
+                </Menu.Item>
+                <Menu.Item
+                  onClick={() => {
+                    dispatch(logout());
+                  }}
+                >
+                  Logout
+                </Menu.Item>
+              </>
             );
           } else {
             return null;

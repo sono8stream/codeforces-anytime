@@ -25,3 +25,12 @@ yarn-error.log*
 # firebase
 /.firebase
 /src/firebase
+
+# migration
+/src/migrate
+
+# google analytics
+/src/ga
+
+# linter
+.eslintcache

@@ -1,13 +1,16 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { useHistory, useLocation } from 'react-router';
 import { Button, Dimmer, Form, Header, Loader, Modal } from 'semantic-ui-react';
 import { updateProfile } from '../actions';
 import { fetchRealRating } from '../api/fetchRealRating';
-import history from '../history';
 import { useAccountInfo, useProfile } from '../hooks';
 import getRatingColorStyle from '../utils/getRatingColorStyle';
 
 const UpdateProfilePage: React.FC = () => {
+  const history = useHistory();
+  const queryParams = new URLSearchParams(useLocation().search);
+
   const dispatch = useDispatch();
   const account = useAccountInfo();
   const profile = useProfile();
@@ -17,6 +20,13 @@ const UpdateProfilePage: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [handleValidity, setHandleValidity] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+  const [isEnglish, setIsEnglish] = useState(false);
+
+  useEffect(() => {
+    if (queryParams.get('lang')) {
+      setIsEnglish(queryParams.get('lang') === 'en');
+    }
+  }, []);
 
   const onButtonClick = useCallback(async () => {
     setIsLoading(true);
@@ -49,6 +59,7 @@ const UpdateProfilePage: React.FC = () => {
           newRating: rating,
           rank: 1,
           startTime: time,
+          performance: 0,
         },
       ],
       registrationTime: time,
@@ -61,34 +72,71 @@ const UpdateProfilePage: React.FC = () => {
           // setIsLoading(true);
         },
         () => {
-          history.push('/profile');
+          history.push(`/users/${account.id}`);
         },
         () => {} // setIsLoading(false)
       )
     );
-  }, [account, dispatch, handle, rating]);
+  }, [account, dispatch, handle, rating, history]);
 
   if (!account.id) {
     return null;
   }
 
   return (
-    <div>
+    <>
+      <Button.Group floated="right">
+        <Button
+          compact={true}
+          positive={!isEnglish}
+          onClick={() => {
+            if (isEnglish) {
+              setIsEnglish(false);
+            }
+          }}
+        >
+          JP
+        </Button>
+        <Button.Or />
+        <Button
+          compact={true}
+          positive={isEnglish}
+          onClick={() => {
+            if (!isEnglish) {
+              setIsEnglish(true);
+            }
+          }}
+        >
+          EN
+        </Button>
+      </Button.Group>
       <Header
         as="h2"
         content="Update Profile"
-        subheader="使用するCodeforcesのハンドルを設定します．"
+        subheader={
+          isEnglish
+            ? 'Specify your user name in Codeforces'
+            : '使用するCodeforcesのハンドルを設定します．'
+        }
       />
       <Form>
         <Form.Input
           fluid={true}
-          error={!handleValidity}
+          error={
+            handleValidity
+              ? false
+              : { content: 'Invalid user name!', pointing: 'above' }
+          }
           label="Handle"
           value={handle}
           onChange={(e) => setHandle(e.target.value)}
         />
         <Form.Checkbox
-          label="本来のレートを引き継ぐ"
+          label={
+            isEnglish
+              ? 'I take over official rating in Codeforces'
+              : '本来のレートを引き継ぐ'
+          }
           checked={extendRating}
           onClick={(e) => setExtendRating(!extendRating)}
         />
@@ -100,7 +148,7 @@ const UpdateProfilePage: React.FC = () => {
           color="red"
           onClick={() => {
             if (profile.handle) {
-              history.push('/profile');
+              history.push(`/users/${account.id}`);
             } else {
               history.push('/');
             }
@@ -109,7 +157,13 @@ const UpdateProfilePage: React.FC = () => {
           Cancel
         </Form.Button>
         <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
-          <Modal.Header content="以下の内容で登録" />
+          <Modal.Header
+            content={
+              isEnglish
+                ? 'Create user with the following information'
+                : '以下の内容で登録'
+            }
+          />
           <Modal.Content>
             <Header as="h3" dividing={true}>
               Handle
@@ -126,7 +180,9 @@ const UpdateProfilePage: React.FC = () => {
           </Modal.Content>
           <Modal.Actions>
             <Header as="h5" color="red" floated="left">
-              ！このサービスにおけるこれまでの参加履歴は削除されます
+              {isEnglish
+                ? '! All your records in this service will be deleted!'
+                : '！このサービスにおけるこれまでの参加履歴は削除されます'}
             </Header>
             <Button color="green" onClick={onModalButtonClick}>
               OK
@@ -140,7 +196,7 @@ const UpdateProfilePage: React.FC = () => {
           <Loader active={true} inline="centered" />
         </Dimmer>
       </Form>
-    </div>
+    </>
   );
 };
 

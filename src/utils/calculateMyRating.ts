@@ -23,14 +23,17 @@ let ratingToSeeds: number[];
 
 export const calculateMyRating = async (
   contestData: ContestData
-): Promise<number> => {
+): Promise<{ nextRating: number; performance: number }> => {
+  contestants = new Array<Contestant>();
   await fetchContestants(contestData.contestID).catch((err) => {
     throw err;
   });
   if (contestants.length === 0) {
     throw new Error();
   }
-  contestants.splice(contestData.rank - 1, 0, {
+
+  const index = contestData.rank;
+  contestants.splice(index, 0, {
     handle: contestData.handle,
     rank: contestData.rank,
     oldRating: contestData.rating,
@@ -44,16 +47,13 @@ export const calculateMyRating = async (
   calcRatingToSeeds();
   calcContestantSeeds(); // 少し時間かかる
   calcBaseRatingDeltas();
-  calcAllAverageRatingInc();
-  calcMajorAverageRatingInc();
-  let index = 0;
-  for (let i = 0; i < contestants.length; i++) {
-    if (contestants[i].handle === contestData.handle) {
-      index = i;
-      break;
-    }
-  }
-  return contestants[index].oldRating + contestants[index].calcedDelta;
+  let correctedDelta = calcAllAverageRatingInc();
+  correctedDelta += calcMajorAverageRatingInc();
+
+  const performance = calcPerformance(contestants[index].rank, correctedDelta);
+  const nextRating =
+    contestants[index].oldRating + contestants[index].calcedDelta;
+  return { nextRating, performance };
 };
 
 const fetchContestants = async (contestID: number) => {
@@ -67,7 +67,6 @@ const fetchContestants = async (contestID: number) => {
   const json: any = await response.json();
   const results: any[] = json.result;
 
-  contestants = new Array<Contestant>();
   for (const result of results) {
     contestants.push({
       handle: result.handle,
@@ -161,6 +160,28 @@ const calcRatingToRank = (targetRank: number, oldRating: number): number => {
   return Math.max(bottom - baseRating, 1);
 };
 
+// ある順位に対し，補正込みのレート変動が0となるレートをパフォーマンスと定義する
+const calcPerformance = (rank: number, correctedDelta: number) => {
+  let bottom = 0;
+  let top = ratingRange + 1;
+  // レート変動が-correctedDelta以上となる最大のレートを求める
+  while (bottom + 1.1 < top) {
+    const mid = Math.trunc((bottom + top) / 2);
+    const rating = mid - baseRating;
+    const seed = ratingToSeeds[mid];
+    const midRank = Math.sqrt(rank * seed);
+
+    const targetRating = calcRatingToRank(midRank, rating);
+    const delta = Math.trunc((targetRating - rating) / 2);
+    if (delta < -correctedDelta) {
+      top = mid;
+    } else {
+      bottom = mid;
+    }
+  }
+  return bottom - baseRating;
+};
+
 const calcEloLoseProbability = (myRate: number, othersRate: number): number => {
   return 1.0 / (1.0 + Math.pow(10.0, (myRate - othersRate) / 400.0));
 };
@@ -174,6 +195,7 @@ const calcAllAverageRatingInc = () => {
   for (const contestant of contestants) {
     contestant.calcedDelta += inc;
   }
+  return inc;
 };
 
 const calcMajorAverageRatingInc = () => {
@@ -196,4 +218,6 @@ const calcMajorAverageRatingInc = () => {
   for (const contestant of contestants) {
     contestant.calcedDelta += inc;
   }
+
+  return inc;
 };

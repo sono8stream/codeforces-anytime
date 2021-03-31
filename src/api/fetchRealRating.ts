@@ -6,7 +6,7 @@ export const fetchRealRating = async (handle: string): Promise<number> => {
     if (handle !== json.result[0].handle) {
       return -1;
     }
-    return json.result[0].rating;
+    return json.result[0].rating || 1500;
   } catch (e) {
     return -1;
   }

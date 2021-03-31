@@ -1,19 +1,15 @@
 {
-  "extends": [
-    "tslint:recommended",
-    "tslint-react",
-    "tslint-config-prettier"
-  ],
-  "rulesDirectory": [
-    "tslint-plugin-prettier"
-  ],
+  "extends": ["tslint:recommended", "tslint-react", "tslint-config-prettier"],
+  "rulesDirectory": ["tslint-plugin-prettier"],
   "rules": {
     "prettier": true,
     "interface-name": false,
     "import-name": false,
+    "no-console": false,
+    "no-empty": false,
     "no-empty-interface": false,
     "object-literal-sort-keys": false,
-    "jsx-no-lambda": false,
-    "no-empty": false
+    "ordered-imports": true,
+    "jsx-no-lambda": false
   }
 }
