@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { useHistory, useLocation, Link } from 'react-router-dom';
 import { Header, Icon, Loader, Pagination, Table } from 'semantic-ui-react';
 import { fetchUsers } from '../actions';
 import RatingColoredName from '../components/RatingColoredName';
@@ -16,6 +16,16 @@ const RankingPage: React.FC = () => {
     }
   }, [dispatch, users]);
 
+  // ページ遷移の管理用
+  const search = useLocation().search;
+  const query = new URLSearchParams(search);
+  const currentPageIndex = parseInt(query.get('page') || '1');
+  const history = useHistory();
+  const handlePageChange = (pageNumber: number) => {
+    // ページ遷移時にURLのクエリパラメータを更新
+    history.push(`?page=${pageNumber}`);
+  };
+
   const activeUsers = useMemo(() => {
     if (Object.keys(users).length === 0) {
       return [];
@@ -25,7 +35,10 @@ const RankingPage: React.FC = () => {
       .filter((key) => {
         return users[key].records.length > 1;
       })
-      .map((id) => ({ id, data: users[id] }))
+      .map((id) => ({
+        id,
+        data: users[id],
+      }))
       .sort((a, b) => {
         if (a.data.rating !== b.data.rating) {
           return b.data.rating - a.data.rating;
@@ -44,26 +57,36 @@ const RankingPage: React.FC = () => {
   // Pagination用。【暫定】表機能をComponent化して使いまわす
   const usersPerPage = 20;
   const pages = Math.ceil(Object.keys(activeUsers).length / usersPerPage);
-  const [currentPageIdx, setCurrentPageIdx] = useState(1);
 
   return (
     <>
       <Header as="h2" content="Ranking" />
 
       <Pagination
-        defaultActivePage={1}
-        activePage={currentPageIdx}
+        activePage={currentPageIndex}
         ellipsisItem={{
           content: <Icon name="ellipsis horizontal" />,
           icon: true,
         }}
-        firstItem={{ content: <Icon name="angle double left" />, icon: true }}
-        lastItem={{ content: <Icon name="angle double right" />, icon: true }}
-        prevItem={{ content: <Icon name="angle left" />, icon: true }}
-        nextItem={{ content: <Icon name="angle right" />, icon: true }}
+        firstItem={{
+          content: <Icon name="angle double left" />,
+          icon: true,
+        }}
+        lastItem={{
+          content: <Icon name="angle double right" />,
+          icon: true,
+        }}
+        prevItem={{
+          content: <Icon name="angle left" />,
+          icon: true,
+        }}
+        nextItem={{
+          content: <Icon name="angle right" />,
+          icon: true,
+        }}
         totalPages={pages}
         onPageChange={(e, { activePage }) =>
-          setCurrentPageIdx(activePage as number)
+          handlePageChange(activePage as number)
         }
       />
 
@@ -81,11 +104,11 @@ const RankingPage: React.FC = () => {
           {(() => {
             let rank = 0;
             let prev = 10000;
-            let cnt = usersPerPage * (currentPageIdx - 1);
+            let cnt = usersPerPage * (currentPageIndex - 1);
 
             return activeUsers
               .filter((contest, i) => {
-                const now = i - usersPerPage * (currentPageIdx - 1);
+                const now = i - usersPerPage * (currentPageIndex - 1);
 
                 if (now >= 0 && now < usersPerPage) {
                   return true;
@@ -127,19 +150,30 @@ const RankingPage: React.FC = () => {
       ) : null}
 
       <Pagination
-        defaultActivePage={1}
-        activePage={currentPageIdx}
+        activePage={currentPageIndex}
         ellipsisItem={{
           content: <Icon name="ellipsis horizontal" />,
           icon: true,
         }}
-        firstItem={{ content: <Icon name="angle double left" />, icon: true }}
-        lastItem={{ content: <Icon name="angle double right" />, icon: true }}
-        prevItem={{ content: <Icon name="angle left" />, icon: true }}
-        nextItem={{ content: <Icon name="angle right" />, icon: true }}
+        firstItem={{
+          content: <Icon name="angle double left" />,
+          icon: true,
+        }}
+        lastItem={{
+          content: <Icon name="angle double right" />,
+          icon: true,
+        }}
+        prevItem={{
+          content: <Icon name="angle left" />,
+          icon: true,
+        }}
+        nextItem={{
+          content: <Icon name="angle right" />,
+          icon: true,
+        }}
         totalPages={pages}
         onPageChange={(e, { activePage }) =>
-          setCurrentPageIdx(activePage as number)
+          handlePageChange(activePage as number)
         }
       />
     </>
