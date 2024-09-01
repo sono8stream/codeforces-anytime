@@ -6,7 +6,7 @@ import { Route, Router } from 'react-router';
 import { applyMiddleware, createStore } from 'redux';
 import thunk from 'redux-thunk';
 import PageWrapper from './components/PageWrapper';
-import { trackID } from './ga/config';
+import trackID from './ga/config';
 import Contact from './pages/Contact';
 import ContestsPage from './pages/ContestsPage';
 import ProfilePage from './pages/ProfilePage';
