@@ -28,6 +28,7 @@ const ContestsPage: React.FC = () => {
     officialRanks[record.contestID] = record.rank;
   }
 
+  // Pagination用。【暫定】表機能をComponent化して使いまわす
   const contestsPerPage = 20;
   const pages = Math.ceil(availableContests.length / contestsPerPage);
   const [currentPageIdx, setCurrentPageIdx] = useState(1);
