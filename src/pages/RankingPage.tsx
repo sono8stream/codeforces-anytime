@@ -5,6 +5,7 @@ import { Header, Icon, Loader, Pagination, Table } from 'semantic-ui-react';
 import { fetchUsers } from '../actions';
 import RatingColoredName from '../components/RatingColoredName';
 import { useUsers } from '../hooks';
+import { dateStringFromSeconds } from '../utils/dateString';
 
 const RankingPage: React.FC = () => {
   const dispatch = useDispatch();
@@ -96,7 +97,8 @@ const RankingPage: React.FC = () => {
             <Table.HeaderCell>Rank</Table.HeaderCell>
             <Table.HeaderCell>User</Table.HeaderCell>
             <Table.HeaderCell>Rating</Table.HeaderCell>
-            <Table.HeaderCell>Number of participations</Table.HeaderCell>
+            <Table.HeaderCell>Match</Table.HeaderCell>
+            <Table.HeaderCell>Last Update</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
 
@@ -139,6 +141,9 @@ const RankingPage: React.FC = () => {
                     </Table.Cell>
                     <Table.Cell>{user.data.rating}</Table.Cell>
                     <Table.Cell>{user.data.records.length - 1}</Table.Cell>
+                    <Table.Cell>
+                      {dateStringFromSeconds(user.data.lastUpdateTime)}
+                    </Table.Cell>
                   </Table.Row>
                 );
               });

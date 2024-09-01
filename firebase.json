@@ -19,7 +19,7 @@
     ],
     "redirects": [
       {
-        "source": "https://codeforces-anytime.firebaseapp.com//:path*",
+        "source": "https://codeforces-anytime.firebaseapp.com//:path",
         "destination": "https://codeforces-anytime.sonoapp.page/:path",
         "type": 301
       },
@@ -29,7 +29,7 @@
         "type": 301
       },
       {
-        "source": "https://codeforces-anytime.web.app//:path*",
+        "source": "https://codeforces-anytime.web.app//:path",
         "destination": "https://codeforces-anytime.sonoapp.page/:path",
         "type": 301
       },

@@ -30,7 +30,7 @@ import {
   useUsers,
 } from '../hooks';
 import UserProfile from '../types/userProfile';
-import { dateStringFromSeconds } from '../utils/dateString';
+import { dateAndTimeStringFromSeconds } from '../utils/dateString';
 import { monthStringFromTime } from '../utils/dateString';
 import { getCertificate } from '../utils/getCertificate';
 import getRatingColorStyle, {
@@ -167,7 +167,7 @@ const ProfilePage: React.FC = () => {
         }
       })()}
       <Header as="h4">
-        Last Update:{dateStringFromSeconds(userInfo.lastUpdateTime)}
+        Last Update:{dateAndTimeStringFromSeconds(userInfo.lastUpdateTime)}
       </Header>
       <ResponsiveContainer width="95%" height={300}>
         <ScatterChart
@@ -212,7 +212,7 @@ const ProfilePage: React.FC = () => {
                   <Header as="h4" dividing={true}>
                     {nameFromTime[time]}
                   </Header>
-                  <div>{dateStringFromSeconds(time)}</div>
+                  <div>{dateAndTimeStringFromSeconds(time)}</div>
                   <div>
                     Rating:
                     <span style={getRatingColorStyle(rating)}>{rating}</span>
@@ -244,7 +244,7 @@ const ProfilePage: React.FC = () => {
             return (
               <Table.Row key={record.startTime}>
                 <Table.Cell>
-                  {dateStringFromSeconds(record.startTime)}
+                  {dateAndTimeStringFromSeconds(record.startTime)}
                 </Table.Cell>
                 <Table.Cell>
                   {record.contestID === 0 ? (

@@ -1,0 +1,114 @@
+[debug] [2024-09-01T09:29:06.031Z] ----------------------------------------------------------------------
+[debug] [2024-09-01T09:29:06.034Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\sono8\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js serve
+[debug] [2024-09-01T09:29:06.035Z] CLI Version:   8.7.0
+[debug] [2024-09-01T09:29:06.035Z] Platform:      win32
+[debug] [2024-09-01T09:29:06.035Z] Node Version:  v20.14.0
+[debug] [2024-09-01T09:29:06.035Z] Time:          Sun Sep 01 2024 18:29:06 GMT+0900 (日本標準時)
+[debug] [2024-09-01T09:29:06.035Z] ----------------------------------------------------------------------
+[debug] [2024-09-01T09:29:06.035Z] 
+[debug] [2024-09-01T09:29:06.049Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2024-09-01T09:29:06.049Z] > authorizing via signed-in user
+[debug] [2024-09-01T09:29:06.050Z] [iam] checking project codeforces-anytime for permissions ["firebase.projects.get"]
+[debug] [2024-09-01T09:29:06.052Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/codeforces-anytime:testIamPermissions  
+ {"permissions":["firebase.projects.get"]}
+[debug] [2024-09-01T09:29:06.423Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Sun, 01 Sep 2024 09:29:06 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","server-timing":"gfet4t7; dur=253","alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2024-09-01T09:29:06.424Z] >>> HTTP REQUEST GET https://firebase.googleapis.com/v1beta1/projects/codeforces-anytime  
+ 
+[debug] [2024-09-01T09:29:06.741Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Sun, 01 Sep 2024 09:29:07 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000","accept-ranges":"none","transfer-encoding":"chunked"}
+[info] 
+[info] === Serving from 'D:\react\codeforces-anytime'...
+[info] 
+[debug] [2024-09-01T09:29:06.744Z] >>> HTTP REQUEST GET https://firebase.googleapis.com/v1beta1/projects/codeforces-anytime/webApps/-/config  
+ 
+[warn] !  Your requested "node" version "12" doesn't match your global version "20" {"metadata":{"emulator":{"name":"functions"},"message":"Your requested \"node\" version \"12\" doesn't match your global version \"20\""}}
+[debug] [2024-09-01T09:29:07.530Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Sun, 01 Sep 2024 09:29:07 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000","accept-ranges":"none","transfer-encoding":"chunked"}
+[info] i  functions: Watching "D:\react\codeforces-anytime\functions" for Cloud Functions... {"metadata":{"emulator":{"name":"functions"},"message":"Watching \"D:\\react\\codeforces-anytime\\functions\" for Cloud Functions..."}}
+[debug] [2024-09-01T09:29:07.582Z] [worker-pool] addWorker(~diagnostic~) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] addWorker(~diagnostic~)"}}
+[debug] [2024-09-01T09:29:07.582Z] [worker-pool] Adding worker with key ~diagnostic~, total=1 {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] Adding worker with key ~diagnostic~, total=1"}}
+[debug] [2024-09-01T09:29:07.582Z] [worker-pool] submitWork(triggerId=) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] submitWork(triggerId=)"}}
+[debug] [2024-09-01T09:29:07.582Z] [worker-~diagnostic~-76813939-a069-42a6-b749-ad3dffdc7340]: Assigning socketPath: \\?\pipe\D:\react\codeforces-anytime\functions\25396 {"metadata":{"emulator":{"name":"functions"},"message":"[worker-~diagnostic~-76813939-a069-42a6-b749-ad3dffdc7340]: Assigning socketPath: \\\\?\\pipe\\D:\\react\\codeforces-anytime\\functions\\25396"}}
+[debug] [2024-09-01T09:29:07.583Z] [worker-~diagnostic~-76813939-a069-42a6-b749-ad3dffdc7340]: BUSY {"metadata":{"emulator":{"name":"functions"},"message":"[worker-~diagnostic~-76813939-a069-42a6-b749-ad3dffdc7340]: BUSY"}}
+[info] i  hosting: Serving hosting files from: build {"metadata":{"emulator":{"name":"hosting"},"message":"Serving hosting files from: \u001b[1mbuild\u001b[22m"}}
+[info] +  hosting: Local server: http://localhost:5000 {"metadata":{"emulator":{"name":"hosting"},"message":"Local server: \u001b[4m\u001b[1mhttp://localhost:5000\u001b[22m\u001b[24m"}}
+[debug] [2024-09-01T09:29:07.996Z] [runtime-status] [25396] Functions runtime initialized. {"cwd":"D:\\react\\codeforces-anytime\\functions","node_version":"20.14.0"} {"metadata":{"emulator":{"name":"functions"},"message":"[runtime-status] [25396] Functions runtime initialized. {\"cwd\":\"D:\\\\react\\\\codeforces-anytime\\\\functions\",\"node_version\":\"20.14.0\"}"}}
+[debug] [2024-09-01T09:29:07.996Z] [runtime-status] [25396] Disabled runtime features: undefined {"metadata":{"emulator":{"name":"functions"},"message":"[runtime-status] [25396] Disabled runtime features: undefined"}}
+[warn] !  The Cloud Functions emulator requires the module "firebase-admin" to be installed. This package is in your package.json, but it's not available. You probably need to run "npm install" in your functions directory. {"metadata":{"emulator":{"name":"functions"},"message":"The Cloud Functions emulator requires the module \"firebase-admin\" to be installed. This package is in your package.json, but it's not available. You probably need to run \"npm install\" in your functions directory."}}
+[info] i  functions: Your functions could not be parsed due to an issue with your node_modules (see above) {"metadata":{"emulator":{"name":"functions"},"message":"Your functions could not be parsed due to an issue with your node_modules (see above)"}}
+[debug] [2024-09-01T09:29:08.023Z] [worker-~diagnostic~-76813939-a069-42a6-b749-ad3dffdc7340]: exited {"metadata":{"emulator":{"name":"functions"},"message":"[worker-~diagnostic~-76813939-a069-42a6-b749-ad3dffdc7340]: exited"}}
+[debug] [2024-09-01T09:29:08.023Z] [worker-~diagnostic~-76813939-a069-42a6-b749-ad3dffdc7340]: FINISHED {"metadata":{"emulator":{"name":"functions"},"message":"[worker-~diagnostic~-76813939-a069-42a6-b749-ad3dffdc7340]: FINISHED"}}
+[debug] [2024-09-01T09:29:23.892Z] ----------------------------------------------------------------------
+[debug] [2024-09-01T09:29:23.895Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\sono8\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js serve
+[debug] [2024-09-01T09:29:23.895Z] CLI Version:   8.7.0
+[debug] [2024-09-01T09:29:23.895Z] Platform:      win32
+[debug] [2024-09-01T09:29:23.896Z] Node Version:  v20.14.0
+[debug] [2024-09-01T09:29:23.896Z] Time:          Sun Sep 01 2024 18:29:23 GMT+0900 (日本標準時)
+[debug] [2024-09-01T09:29:23.896Z] ----------------------------------------------------------------------
+[debug] [2024-09-01T09:29:23.896Z] 
+[debug] [2024-09-01T09:29:23.908Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2024-09-01T09:29:23.908Z] > authorizing via signed-in user
+[debug] [2024-09-01T09:29:23.909Z] [iam] checking project codeforces-anytime for permissions ["firebase.projects.get"]
+[debug] [2024-09-01T09:29:23.911Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/codeforces-anytime:testIamPermissions  
+ {"permissions":["firebase.projects.get"]}
+[debug] [2024-09-01T09:29:24.607Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Sun, 01 Sep 2024 09:29:24 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","server-timing":"gfet4t7; dur=580","alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2024-09-01T09:29:24.609Z] >>> HTTP REQUEST GET https://firebase.googleapis.com/v1beta1/projects/codeforces-anytime  
+ 
+[debug] [2024-09-01T09:29:24.918Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Sun, 01 Sep 2024 09:29:25 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000","accept-ranges":"none","transfer-encoding":"chunked"}
+[info] 
+[info] === Serving from 'D:\react\codeforces-anytime'...
+[info] 
+[debug] [2024-09-01T09:29:24.921Z] >>> HTTP REQUEST GET https://firebase.googleapis.com/v1beta1/projects/codeforces-anytime/webApps/-/config  
+ 
+[warn] !  Your requested "node" version "12" doesn't match your global version "20" {"metadata":{"emulator":{"name":"functions"},"message":"Your requested \"node\" version \"12\" doesn't match your global version \"20\""}}
+[debug] [2024-09-01T09:29:25.750Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Sun, 01 Sep 2024 09:29:26 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000","accept-ranges":"none","transfer-encoding":"chunked"}
+[info] i  functions: Watching "D:\react\codeforces-anytime\functions" for Cloud Functions... {"metadata":{"emulator":{"name":"functions"},"message":"Watching \"D:\\react\\codeforces-anytime\\functions\" for Cloud Functions..."}}
+[debug] [2024-09-01T09:29:25.793Z] [worker-pool] addWorker(~diagnostic~) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] addWorker(~diagnostic~)"}}
+[debug] [2024-09-01T09:29:25.793Z] [worker-pool] Adding worker with key ~diagnostic~, total=1 {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] Adding worker with key ~diagnostic~, total=1"}}
+[debug] [2024-09-01T09:29:25.793Z] [worker-pool] submitWork(triggerId=) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] submitWork(triggerId=)"}}
+[debug] [2024-09-01T09:29:25.794Z] [worker-~diagnostic~-a1483f73-3a55-4ee3-9c5e-e70b1fa445ed]: Assigning socketPath: \\?\pipe\D:\react\codeforces-anytime\functions\13648 {"metadata":{"emulator":{"name":"functions"},"message":"[worker-~diagnostic~-a1483f73-3a55-4ee3-9c5e-e70b1fa445ed]: Assigning socketPath: \\\\?\\pipe\\D:\\react\\codeforces-anytime\\functions\\13648"}}
+[debug] [2024-09-01T09:29:25.794Z] [worker-~diagnostic~-a1483f73-3a55-4ee3-9c5e-e70b1fa445ed]: BUSY {"metadata":{"emulator":{"name":"functions"},"message":"[worker-~diagnostic~-a1483f73-3a55-4ee3-9c5e-e70b1fa445ed]: BUSY"}}
+[info] i  hosting: Serving hosting files from: build {"metadata":{"emulator":{"name":"hosting"},"message":"Serving hosting files from: \u001b[1mbuild\u001b[22m"}}
+[info] +  hosting: Local server: http://localhost:5000 {"metadata":{"emulator":{"name":"hosting"},"message":"Local server: \u001b[4m\u001b[1mhttp://localhost:5000\u001b[22m\u001b[24m"}}
+[debug] [2024-09-01T09:29:26.165Z] [runtime-status] [13648] Functions runtime initialized. {"cwd":"D:\\react\\codeforces-anytime\\functions","node_version":"20.14.0"} {"metadata":{"emulator":{"name":"functions"},"message":"[runtime-status] [13648] Functions runtime initialized. {\"cwd\":\"D:\\\\react\\\\codeforces-anytime\\\\functions\",\"node_version\":\"20.14.0\"}"}}
+[debug] [2024-09-01T09:29:26.165Z] [runtime-status] [13648] Disabled runtime features: undefined {"metadata":{"emulator":{"name":"functions"},"message":"[runtime-status] [13648] Disabled runtime features: undefined"}}
+[warn] !  The Cloud Functions emulator requires the module "firebase-admin" to be installed. This package is in your package.json, but it's not available. You probably need to run "npm install" in your functions directory. {"metadata":{"emulator":{"name":"functions"},"message":"The Cloud Functions emulator requires the module \"firebase-admin\" to be installed. This package is in your package.json, but it's not available. You probably need to run \"npm install\" in your functions directory."}}
+[info] i  functions: Your functions could not be parsed due to an issue with your node_modules (see above) {"metadata":{"emulator":{"name":"functions"},"message":"Your functions could not be parsed due to an issue with your node_modules (see above)"}}
+[debug] [2024-09-01T09:29:26.194Z] [worker-~diagnostic~-a1483f73-3a55-4ee3-9c5e-e70b1fa445ed]: exited {"metadata":{"emulator":{"name":"functions"},"message":"[worker-~diagnostic~-a1483f73-3a55-4ee3-9c5e-e70b1fa445ed]: exited"}}
+[debug] [2024-09-01T09:29:26.194Z] [worker-~diagnostic~-a1483f73-3a55-4ee3-9c5e-e70b1fa445ed]: FINISHED {"metadata":{"emulator":{"name":"functions"},"message":"[worker-~diagnostic~-a1483f73-3a55-4ee3-9c5e-e70b1fa445ed]: FINISHED"}}
+[debug] [2024-09-01T09:29:45.716Z] ----------------------------------------------------------------------
+[debug] [2024-09-01T09:29:45.719Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\sono8\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js serve
+[debug] [2024-09-01T09:29:45.720Z] CLI Version:   8.7.0
+[debug] [2024-09-01T09:29:45.720Z] Platform:      win32
+[debug] [2024-09-01T09:29:45.720Z] Node Version:  v20.14.0
+[debug] [2024-09-01T09:29:45.720Z] Time:          Sun Sep 01 2024 18:29:45 GMT+0900 (日本標準時)
+[debug] [2024-09-01T09:29:45.720Z] ----------------------------------------------------------------------
+[debug] [2024-09-01T09:29:45.720Z] 
+[debug] [2024-09-01T09:29:45.728Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2024-09-01T09:29:45.729Z] > authorizing via signed-in user
+[debug] [2024-09-01T09:29:45.729Z] [iam] checking project codeforces-anytime for permissions ["firebase.projects.get"]
+[debug] [2024-09-01T09:29:45.732Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/codeforces-anytime:testIamPermissions  
+ {"permissions":["firebase.projects.get"]}
+[debug] [2024-09-01T09:29:46.430Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Sun, 01 Sep 2024 09:29:46 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","server-timing":"gfet4t7; dur=579","alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2024-09-01T09:29:46.431Z] >>> HTTP REQUEST GET https://firebase.googleapis.com/v1beta1/projects/codeforces-anytime  
+ 
+[debug] [2024-09-01T09:29:46.730Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Sun, 01 Sep 2024 09:29:47 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000","accept-ranges":"none","transfer-encoding":"chunked"}
+[info] 
+[info] === Serving from 'D:\react\codeforces-anytime'...
+[info] 
+[debug] [2024-09-01T09:29:46.733Z] >>> HTTP REQUEST GET https://firebase.googleapis.com/v1beta1/projects/codeforces-anytime/webApps/-/config  
+ 
+[warn] !  Your requested "node" version "12" doesn't match your global version "20" {"metadata":{"emulator":{"name":"functions"},"message":"Your requested \"node\" version \"12\" doesn't match your global version \"20\""}}
+[debug] [2024-09-01T09:29:47.479Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Sun, 01 Sep 2024 09:29:47 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000","accept-ranges":"none","transfer-encoding":"chunked"}
+[info] i  functions: Watching "D:\react\codeforces-anytime\functions" for Cloud Functions... {"metadata":{"emulator":{"name":"functions"},"message":"Watching \"D:\\react\\codeforces-anytime\\functions\" for Cloud Functions..."}}
+[debug] [2024-09-01T09:29:47.540Z] [worker-pool] addWorker(~diagnostic~) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] addWorker(~diagnostic~)"}}
+[debug] [2024-09-01T09:29:47.541Z] [worker-pool] Adding worker with key ~diagnostic~, total=1 {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] Adding worker with key ~diagnostic~, total=1"}}
+[debug] [2024-09-01T09:29:47.541Z] [worker-pool] submitWork(triggerId=) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] submitWork(triggerId=)"}}
+[debug] [2024-09-01T09:29:47.541Z] [worker-~diagnostic~-98e9a461-597f-4cbf-822c-17958a682908]: Assigning socketPath: \\?\pipe\D:\react\codeforces-anytime\functions\6192 {"metadata":{"emulator":{"name":"functions"},"message":"[worker-~diagnostic~-98e9a461-597f-4cbf-822c-17958a682908]: Assigning socketPath: \\\\?\\pipe\\D:\\react\\codeforces-anytime\\functions\\6192"}}
+[debug] [2024-09-01T09:29:47.542Z] [worker-~diagnostic~-98e9a461-597f-4cbf-822c-17958a682908]: BUSY {"metadata":{"emulator":{"name":"functions"},"message":"[worker-~diagnostic~-98e9a461-597f-4cbf-822c-17958a682908]: BUSY"}}
+[info] i  hosting: Serving hosting files from: build {"metadata":{"emulator":{"name":"hosting"},"message":"Serving hosting files from: \u001b[1mbuild\u001b[22m"}}
+[info] +  hosting: Local server: http://localhost:5000 {"metadata":{"emulator":{"name":"hosting"},"message":"Local server: \u001b[4m\u001b[1mhttp://localhost:5000\u001b[22m\u001b[24m"}}
+[debug] [2024-09-01T09:29:47.949Z] [runtime-status] [6192] Functions runtime initialized. {"cwd":"D:\\react\\codeforces-anytime\\functions","node_version":"20.14.0"} {"metadata":{"emulator":{"name":"functions"},"message":"[runtime-status] [6192] Functions runtime initialized. {\"cwd\":\"D:\\\\react\\\\codeforces-anytime\\\\functions\",\"node_version\":\"20.14.0\"}"}}
+[debug] [2024-09-01T09:29:47.950Z] [runtime-status] [6192] Disabled runtime features: undefined {"metadata":{"emulator":{"name":"functions"},"message":"[runtime-status] [6192] Disabled runtime features: undefined"}}
+[warn] !  The Cloud Functions emulator requires the module "firebase-admin" to be installed. This package is in your package.json, but it's not available. You probably need to run "npm install" in your functions directory. {"metadata":{"emulator":{"name":"functions"},"message":"The Cloud Functions emulator requires the module \"firebase-admin\" to be installed. This package is in your package.json, but it's not available. You probably need to run \"npm install\" in your functions directory."}}
+[info] i  functions: Your functions could not be parsed due to an issue with your node_modules (see above) {"metadata":{"emulator":{"name":"functions"},"message":"Your functions could not be parsed due to an issue with your node_modules (see above)"}}
+[debug] [2024-09-01T09:29:47.970Z] [worker-~diagnostic~-98e9a461-597f-4cbf-822c-17958a682908]: exited {"metadata":{"emulator":{"name":"functions"},"message":"[worker-~diagnostic~-98e9a461-597f-4cbf-822c-17958a682908]: exited"}}
+[debug] [2024-09-01T09:29:47.970Z] [worker-~diagnostic~-98e9a461-597f-4cbf-822c-17958a682908]: FINISHED {"metadata":{"emulator":{"name":"functions"},"message":"[worker-~diagnostic~-98e9a461-597f-4cbf-822c-17958a682908]: FINISHED"}}
