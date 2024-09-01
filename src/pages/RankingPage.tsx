@@ -38,16 +38,19 @@ const RankingPage: React.FC = () => {
       })
       .map((id) => ({
         id,
-        data: users[id],
+        handle: users[id].handle,
+        rating: users[id].rating,
+        match: users[id].records.length - 1,
+        lastUpdate: users[id].lastUpdateTime,
       }))
       .sort((a, b) => {
-        if (a.data.rating !== b.data.rating) {
-          return b.data.rating - a.data.rating;
+        if (a.rating !== b.rating) {
+          return b.rating - a.rating;
         }
 
-        if (a.data.handle < b.data.handle) {
+        if (a.handle < b.handle) {
           return -1;
-        } else if (a.data.handle === b.data.handle) {
+        } else if (a.handle === b.handle) {
           return 0;
         } else {
           return 1;
@@ -118,13 +121,13 @@ const RankingPage: React.FC = () => {
                 return false;
               })
               .map((user) => {
-                if (prev !== user.data.rating) {
-                  prev = user.data.rating;
+                if (prev !== user.rating) {
+                  prev = user.rating;
                   rank = cnt + 1;
                 }
                 cnt++;
                 return (
-                  <Table.Row key={user.data.handle}>
+                  <Table.Row key={user.handle}>
                     <Table.Cell>{rank}</Table.Cell>
                     <Table.Cell>
                       <Link
@@ -134,15 +137,15 @@ const RankingPage: React.FC = () => {
                         }}
                       >
                         <RatingColoredName
-                          rating={user.data.rating}
-                          name={user.data.handle}
+                          rating={user.rating}
+                          name={user.handle}
                         />
                       </Link>
                     </Table.Cell>
-                    <Table.Cell>{user.data.rating}</Table.Cell>
-                    <Table.Cell>{user.data.records.length - 1}</Table.Cell>
+                    <Table.Cell>{user.rating}</Table.Cell>
+                    <Table.Cell>{user.match}</Table.Cell>
                     <Table.Cell>
-                      {dateStringFromSeconds(user.data.lastUpdateTime)}
+                      {dateStringFromSeconds(user.lastUpdate)}
                     </Table.Cell>
                   </Table.Row>
                 );
