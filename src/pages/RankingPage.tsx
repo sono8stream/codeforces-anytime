@@ -79,7 +79,6 @@ const RankingPage: React.FC = () => {
 
         <Table.Body>
           {(() => {
-            console.log(currentPageIdx);
             let rank = 0;
             let prev = 10000;
             let cnt = usersPerPage * (currentPageIdx - 1);
@@ -126,6 +125,23 @@ const RankingPage: React.FC = () => {
       {Object.keys(users).length === 0 ? (
         <Loader active={true} inline="centered" />
       ) : null}
+
+      <Pagination
+        defaultActivePage={1}
+        activePage={currentPageIdx}
+        ellipsisItem={{
+          content: <Icon name="ellipsis horizontal" />,
+          icon: true,
+        }}
+        firstItem={{ content: <Icon name="angle double left" />, icon: true }}
+        lastItem={{ content: <Icon name="angle double right" />, icon: true }}
+        prevItem={{ content: <Icon name="angle left" />, icon: true }}
+        nextItem={{ content: <Icon name="angle right" />, icon: true }}
+        totalPages={pages}
+        onPageChange={(e, { activePage }) =>
+          setCurrentPageIdx(activePage as number)
+        }
+      />
     </>
   );
 };
