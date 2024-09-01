@@ -17,6 +17,28 @@
       "**/.*",
       "**/node_modules/**"
     ],
+    "redirects": [
+      {
+        "source": "https://codeforces-anytime.firebaseapp.com//:path*",
+        "destination": "https://codeforces-anytime.sonoapp.page/:path",
+        "type": 301
+      },
+      {
+        "source": "https://codeforces-anytime.firebaseapp.com/",
+        "destination": "https://codeforces-anytime.sonoapp.page/",
+        "type": 301
+      },
+      {
+        "source": "https://codeforces-anytime.web.app//:path*",
+        "destination": "https://codeforces-anytime.sonoapp.page/:path",
+        "type": 301
+      },
+      {
+        "source": "https://codeforces-anytime.web.app/",
+        "destination": "https://codeforces-anytime.sonoapp.page/",
+        "type": 301
+      }
+    ],
     "rewrites": [
       {
         "source": "**",
