@@ -1,6 +1,5 @@
 import { createBrowserHistory } from 'history';
 import React from 'react';
-import ReactGA from 'react-ga';
 import { Provider } from 'react-redux';
 import { Route, Router } from 'react-router';
 import { applyMiddleware, createStore } from 'redux';
@@ -14,34 +13,45 @@ import RankingPage from './pages/RankingPage';
 import StartPage from './pages/StartPage';
 import UpdateProfilePage from './pages/UpdateProfilePage';
 import rootReducer from './reducers';
+import { Helmet } from 'react-helmet';
 
 const store = createStore(rootReducer, applyMiddleware(thunk));
 
 const App: React.FC = () => {
-  ReactGA.initialize(trackID);
   const history = createBrowserHistory();
-  history.listen(({ pathname }) => {
-    ReactGA.set({ page: pathname });
-    ReactGA.pageview(pathname);
-  });
 
   return (
-    <Provider store={store}>
-      <Router history={history}>
-        <PageWrapper>
-          <Route exact={true} path="/contests" component={ContestsPage} />
-          <Route exact={true} path="/ranking" component={RankingPage} />
-          <Route exact={true} path="/users/:id" component={ProfilePage} />
-          <Route
-            exact={true}
-            path="/profile/update"
-            component={UpdateProfilePage}
-          />
-          <Route exact={true} path="/contact" component={Contact} />
-          <Route exact={true} path="/" component={StartPage} />
-        </PageWrapper>
-      </Router>
-    </Provider>
+    <div>
+      <Helmet>
+        <script
+          async
+          src={`https://www.googletagmanager.com/gtag/js?id=${trackID}`}
+        ></script>
+        <script>
+          {`
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+            `}
+        </script>
+      </Helmet>
+      <Provider store={store}>
+        <Router history={history}>
+          <PageWrapper>
+            <Route exact={true} path="/contests" component={ContestsPage} />
+            <Route exact={true} path="/ranking" component={RankingPage} />
+            <Route exact={true} path="/users/:id" component={ProfilePage} />
+            <Route
+              exact={true}
+              path="/profile/update"
+              component={UpdateProfilePage}
+            />
+            <Route exact={true} path="/contact" component={Contact} />
+            <Route exact={true} path="/" component={StartPage} />
+          </PageWrapper>
+        </Router>
+      </Provider>
+    </div>
   );
 };
 
