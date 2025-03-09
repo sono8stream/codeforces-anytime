@@ -47,7 +47,7 @@ commands:
       - run:
           name: Add google analytics ID
           command: echo "export const trackID = '$GOOGLE_ANALYTICS_TRACK_ID';" > src/ga/config.ts
-      - run:
+                  - run:
           name: Add firebase config dir
           command: mkdir src/firebase
       - run:
