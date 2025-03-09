@@ -1,7 +1,7 @@
 import { createBrowserHistory } from 'history';
 import React from 'react';
 import { Provider } from 'react-redux';
-import { Route, Router } from 'react-router';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { applyMiddleware, createStore } from 'redux';
 import thunk from 'redux-thunk';
 import PageWrapper from './components/PageWrapper';
@@ -36,7 +36,7 @@ const App: React.FC = () => {
         </script>
       </Helmet>
       <Provider store={store}>
-        <Router history={history}>
+        <Router>
           <PageWrapper>
             <Route exact={true} path="/contests" component={ContestsPage} />
             <Route exact={true} path="/ranking" component={RankingPage} />

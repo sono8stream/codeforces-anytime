@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { useHistory, useLocation } from 'react-router';
+import { useHistory, useLocation } from 'react-router-dom';
 import { Button, Container, Divider, Menu, Segment } from 'semantic-ui-react';
 import { changeAccountInfo, logout } from '../actions';
 import firebase from '../firebase';

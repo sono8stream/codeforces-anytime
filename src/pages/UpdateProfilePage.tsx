@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useHistory, useLocation } from 'react-router';
+import { useHistory, useLocation } from 'react-router-dom';
 import { Button, Dimmer, Form, Header, Loader, Modal } from 'semantic-ui-react';
 import { updateProfile } from '../actions';
 import { fetchRealRating } from '../api/fetchRealRating';
@@ -74,7 +74,7 @@ const UpdateProfilePage: React.FC = () => {
         () => {
           history.push(`/users/${account.id}`);
         },
-        () => {} // setIsLoading(false)
+        () => { } // setIsLoading(false)
       )
     );
   }, [account, dispatch, handle, rating, history]);
