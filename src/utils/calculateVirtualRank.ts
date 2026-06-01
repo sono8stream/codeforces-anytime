@@ -124,7 +124,7 @@ export const calculateVirtualRank = async (data: {
   let myScore = 0;
   let myPenalty = 0;
 
-  for (const [idx, time] of solveTime) {
+  for (const [idx, time] of Array.from(solveTime)) {
     const wrongs = wrongsBefore.get(idx) ?? 0;
     if (cfStyle) {
       const maxPts = maxPointsByIndex.get(idx) ?? 0;
