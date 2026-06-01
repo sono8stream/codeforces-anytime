@@ -53,8 +53,7 @@ describe('calculateVirtualRank CF API integration', () => {
 
       const contestDuration = 10800; // 3 hours
       expect(result.contestName).toContain('1092');
-      expect(result.myRank).toBeGreaterThan(0);
-      expect(result.myRank).toBeLessThanOrEqual(310); // 公式参加者 309 名 + 1
+      expect(result.myRank).toBe(1); // maroonrk は公式参加者全員より高スコア
       expect(result.endTime).toBe(MAROONRK_VIRTUAL.startTime + contestDuration);
     },
     TIMEOUT

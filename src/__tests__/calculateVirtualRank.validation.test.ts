@@ -11,7 +11,7 @@
  *
  * 新アルゴリズム:
  *   - CF 型: CF スコア式で合計スコアを算出 → 公式参加者のスコアと比較して正確なランク
- *   - ICPC 型: 正解数 + ペナルティで正確なランク
+ *   - ICPC 型: 正解数 + ペナルティ（10分/誤答）で正確なランク
  *
  * 実行: npm test -- --testPathPattern="calculateVirtualRank.validation" --watchAll=false
  */
@@ -36,8 +36,8 @@ interface TestContext {
 }
 
 /**
- * standings + submissions から正確なランク範囲を計算する
- * （calculateVirtualRank の独立した参照実装として機能する）
+ * standings + submissions から正確なランクを計算する参照実装。
+ * calculateVirtualRank と独立して実装し、両者の一致を確認する。
  */
 async function buildTestContext(
   handle: string,
@@ -59,7 +59,6 @@ async function buildTestContext(
     standingsJson.result.problems.map((p: any) => [p.index, p.points as number])
   );
 
-  // このバーチャルセッションの提出を集計
   const mySubmissions = (submissionsJson.result as any[]).filter(
     (s: any) =>
       s.contestId === contestID &&
@@ -84,7 +83,6 @@ async function buildTestContext(
   }
   const solvedCount = solvedMap.size;
 
-  // 公式参加者の中での正確なランク範囲を計算
   const rows = (standingsJson.result.rows as any[]).filter(
     (r: any) => r.party.participantType === 'CONTESTANT' && !r.party.ghost
   );
@@ -95,7 +93,6 @@ async function buildTestContext(
       if (s > solvedCount || (s === solvedCount && row.penalty < penalty)) strict++;
       if (s > solvedCount || (s === solvedCount && row.penalty <= penalty)) sameOrBetter++;
     } else {
-      // CF 型: standings の row.points は API が算出した正確なスコア
       if (row.points > cfScore) strict++;
       if (row.points >= cfScore) sameOrBetter++;
     }
@@ -111,142 +108,111 @@ async function buildTestContext(
   };
 }
 
+async function assertRank(
+  handle: string,
+  contestID: number,
+  startTime: number
+) {
+  const ctx = await buildTestContext(handle, contestID, startTime);
+  const result = await calculateVirtualRank({
+    contestID,
+    handle,
+    startTime,
+    nowTime: Math.floor(Date.now() / 1000),
+  });
+
+  console.log(
+    `  ${handle} contest=${contestID} ` +
+    `solved=${ctx.solvedCount} ` +
+    (ctx.isICPC ? `penalty=${ctx.penalty}` : `cfScore=${ctx.cfScore}`) +
+    ` rank=${result.myRank} range=[${ctx.strictBetterRank}, ${ctx.sameOrBetterRank}]`
+  );
+
+  // buildTestContext と calculateVirtualRank は同じアルゴリズム・同じデータを参照するため一致する
+  expect(result.myRank).toBe(ctx.strictBetterRank);
+  expect(result.myRank).toBeGreaterThanOrEqual(1);
+  return ctx;
+}
+
 // ---- テストケース定義 ----
 
-// yaaya の旧アルゴリズムによる記録（Codeforces Anytime より）
+// yaaya の記録
 const DIV2_CASES = [
-  { contestID: 1934, startTime: 1775833200, storedRank: 147,  label: 'Round 931  (4 solved)' },
-  { contestID: 2001, startTime: 1775787300, storedRank: 131,  label: 'Round 967  (4 solved)' },
-  { contestID: 2217, startTime: 1775775000, storedRank: 3157, label: 'Round 1091 (3 solved)' },
-  { contestID: 1995, startTime: 1775466900, storedRank: 164,  label: 'Round 961  (4 solved)' },
-  { contestID: 2031, startTime: 1775016600, storedRank: 79,   label: 'Round 987  (5 solved)' },
-  { contestID: 2003, startTime: 1775120400, storedRank: 796,  label: 'Round 968  (4 solved)' },
-  { contestID: 2059, startTime: 1774303200, storedRank: 9,    label: 'Round 1002 (5 solved)' },
-  { contestID: 2067, startTime: 1774029900, storedRank: 12,   label: 'Round 1004 (5 solved)' },
+  { contestID: 1934, startTime: 1775833200, label: 'Round 931  (Div.2, 4 solved)' },
+  { contestID: 2001, startTime: 1775787300, label: 'Round 967  (Div.2, 4 solved)' },
+  { contestID: 2217, startTime: 1775775000, label: 'Round 1091 (Div.2, 3 solved)' },
+  { contestID: 1995, startTime: 1775466900, label: 'Round 961  (Div.2, 4 solved)' },
+  { contestID: 2031, startTime: 1775016600, label: 'Round 987  (Div.2, 5 solved)' },
+  { contestID: 2003, startTime: 1775120400, label: 'Round 968  (Div.2, 4 solved)' },
+  { contestID: 2059, startTime: 1774303200, label: 'Round 1002 (Div.2, 5 solved)' },
+  { contestID: 2067, startTime: 1774029900, label: 'Round 1004 (Div.2, 5 solved)' },
 ];
 
 const DIV1_DIV2_CASES = [
-  { contestID: 2211, startTime: 1774872000, storedRank: 3395, label: 'Nebius Round 2 / Round 1088 (3 solved)' },
+  { contestID: 2211, startTime: 1774872000, label: 'Nebius Round 2 / Round 1088 (Div.1+2, 3 solved)' },
 ];
 
-// ---- Div.2 テスト ----
-describe('Div.2 バーチャルランク検証 (CF スタイル / yaaya)', () => {
+// maroonrk の記録（Div.1）
+const DIV1_CASES = [
+  { contestID: 2089, startTime: 1749762000, label: 'Round 1012 (Div.1)'        },
+  { contestID: 2097, startTime: 1746015600, label: 'Round 1021 (Div.1)'        },
+  { contestID: 2101, startTime: 1747404000, label: 'Round 1024 (Div.1)'        },
+];
+
+// ICPC 型: maroonrk（ICPC Asia） + yaaya（Educational）
+const ICPC_CASES = [
+  { handle: 'maroonrk', contestID: 2172, startTime: 1764403200, label: 'ICPC Asia Taichung 2025 (全問解答)' },
+  { handle: 'yaaya',    contestID: 2230, startTime: 1779154500, label: 'Educational Round 190'             },
+];
+
+// ---- Div.2 テスト（CF 型）----
+
+describe('Div.2 バーチャルランク検証 (CF 型 / yaaya)', () => {
   for (const tc of DIV2_CASES) {
-    it(
-      `contest ${tc.contestID} ${tc.label}: 旧ランク=${tc.storedRank}`,
-      async () => {
-        const ctx = await buildTestContext('yaaya', tc.contestID, tc.startTime);
-        expect(ctx.isICPC).toBe(false);
-
-        const result = await calculateVirtualRank({
-          contestID: tc.contestID,
-          handle: 'yaaya',
-          startTime: tc.startTime,
-          nowTime: Math.floor(Date.now() / 1000),
-        });
-
-        // CF スコア式で正確なランクが算出されるため [strict+1, sameOrBetter+1] に収まる
-        expect(result.myRank).toBeGreaterThanOrEqual(ctx.strictBetterRank);
-        expect(result.myRank).toBeLessThanOrEqual(ctx.sameOrBetterRank);
-        expect(result.myRank).toBeGreaterThanOrEqual(1);
-
-        console.log(
-          `  solved=${ctx.solvedCount} cfScore=${ctx.cfScore} ` +
-          `new=${result.myRank} stored=${tc.storedRank} ` +
-          `range=[${ctx.strictBetterRank}, ${ctx.sameOrBetterRank}]`
-        );
-      },
-      TIMEOUT * 2
-    );
+    it(`contest ${tc.contestID} ${tc.label}`, async () => {
+      const ctx = await assertRank('yaaya', tc.contestID, tc.startTime);
+      expect(ctx.isICPC).toBe(false);
+    }, TIMEOUT * 2);
   }
 });
 
-// ---- Div.1+2 テスト ----
-describe('Div.1+Div.2 バーチャルランク検証 (CF スタイル / yaaya)', () => {
+// ---- Div.1+2 テスト（CF 型）----
+
+describe('Div.1+Div.2 バーチャルランク検証 (CF 型 / yaaya)', () => {
   for (const tc of DIV1_DIV2_CASES) {
-    it(
-      `contest ${tc.contestID} ${tc.label}: 旧ランク=${tc.storedRank}`,
-      async () => {
-        const ctx = await buildTestContext('yaaya', tc.contestID, tc.startTime);
-        expect(ctx.isICPC).toBe(false);
-
-        const result = await calculateVirtualRank({
-          contestID: tc.contestID,
-          handle: 'yaaya',
-          startTime: tc.startTime,
-          nowTime: Math.floor(Date.now() / 1000),
-        });
-
-        expect(result.myRank).toBeGreaterThanOrEqual(ctx.strictBetterRank);
-        expect(result.myRank).toBeLessThanOrEqual(ctx.sameOrBetterRank);
-        expect(result.myRank).toBeGreaterThanOrEqual(1);
-
-        console.log(
-          `  solved=${ctx.solvedCount} cfScore=${ctx.cfScore} ` +
-          `new=${result.myRank} stored=${tc.storedRank} ` +
-          `range=[${ctx.strictBetterRank}, ${ctx.sameOrBetterRank}]`
-        );
-      },
-      TIMEOUT * 2
-    );
+    it(`contest ${tc.contestID} ${tc.label}`, async () => {
+      const ctx = await assertRank('yaaya', tc.contestID, tc.startTime);
+      expect(ctx.isICPC).toBe(false);
+    }, TIMEOUT * 2);
   }
 });
 
-// ---- Div.3 / ICPC スタイル テスト ----
-describe('Div.3/ICPC バーチャルランク検証 (ICPC スタイル / maroonrk)', () => {
-  it(
-    'contest 2172 (ICPC Asia Taichung 2025) 全問解答: rank=1',
-    async () => {
-      const HANDLE = 'maroonrk';
-      const CONTEST_ID = 2172;
-      const START_TIME = 1764403200;
+// ---- Div.1 テスト（CF 型）----
 
-      const ctx = await buildTestContext(HANDLE, CONTEST_ID, START_TIME);
+describe('Div.1 バーチャルランク検証 (CF 型 / maroonrk)', () => {
+  for (const tc of DIV1_CASES) {
+    it(`contest ${tc.contestID} ${tc.label}`, async () => {
+      const ctx = await assertRank('maroonrk', tc.contestID, tc.startTime);
+      expect(ctx.isICPC).toBe(false);
+    }, TIMEOUT * 2);
+  }
+});
+
+// ---- ICPC 型テスト（Div.3/Educational）----
+
+describe('ICPC 型バーチャルランク検証', () => {
+  for (const tc of ICPC_CASES) {
+    it(`contest ${tc.contestID} ${tc.label} (${tc.handle})`, async () => {
+      const ctx = await assertRank(tc.handle, tc.contestID, tc.startTime);
       expect(ctx.isICPC).toBe(true);
-
-      const result = await calculateVirtualRank({
-        contestID: CONTEST_ID,
-        handle: HANDLE,
-        startTime: START_TIME,
-        nowTime: Math.floor(Date.now() / 1000),
-      });
-
-      // ICPC は正確なランクが算出される
-      expect(result.myRank).toBeGreaterThanOrEqual(ctx.strictBetterRank);
-      expect(result.myRank).toBeLessThanOrEqual(ctx.sameOrBetterRank);
-      expect(result.myRank).toBeGreaterThanOrEqual(1);
-
-      console.log(
-        `  solved=${ctx.solvedCount} penalty=${ctx.penalty} ` +
-        `new=${result.myRank} range=[${ctx.strictBetterRank}, ${ctx.sameOrBetterRank}]`
-      );
-    },
-    TIMEOUT * 3
-  );
+    }, TIMEOUT * 3);
+  }
 });
 
 // ---- 4/11 以降リグレッションテスト ----
-describe('4/11以降コンテスト (修正後の動作確認)', () => {
-  it(
-    'contest 2215 (maroonrk, 2026/4/12): rank > 0 で正常動作',
-    async () => {
-      const ctx = await buildTestContext('maroonrk', 2215, 1776009000);
-      const result = await calculateVirtualRank({
-        contestID: 2215,
-        handle: 'maroonrk',
-        startTime: 1776009000,
-        nowTime: Math.floor(Date.now() / 1000),
-      });
 
-      expect(result.myRank).toBeGreaterThanOrEqual(ctx.strictBetterRank);
-      expect(result.myRank).toBeLessThanOrEqual(ctx.sameOrBetterRank);
-      expect(result.myRank).toBeGreaterThan(0);
-      expect(result.contestName).toBeTruthy();
-      console.log(
-        `  cfScore=${ctx.cfScore} rank=${result.myRank} ` +
-        `range=[${ctx.strictBetterRank}, ${ctx.sameOrBetterRank}] contest=${result.contestName}`
-      );
-    },
-    TIMEOUT
-  );
+describe('4/11以降コンテスト (修正後の動作確認)', () => {
+  it('contest 2215 (maroonrk, 2026/4/12): API変更後も正常動作', async () => {
+    await assertRank('maroonrk', 2215, 1776009000);
+  }, TIMEOUT);
 });
