@@ -22,6 +22,7 @@ import {
   Table,
 } from 'semantic-ui-react';
 import { fetchProfile, fetchUsers, updateContestRecords } from '../actions';
+import firebase from '../firebase';
 import RatingColoredName from '../components/RatingColoredName';
 import {
   useAccountInfo,
@@ -53,6 +54,7 @@ const ProfilePage: React.FC = () => {
 
   const [certIdx, setCertIdx] = useState(-1);
   const [isEnglish, setIsEnglish] = useState(false);
+  const [debugLastUpdateTime, setDebugLastUpdateTime] = useState('');
 
   useEffect(() => {
     if (queryParams.get('cert')) {
@@ -84,20 +86,18 @@ const ProfilePage: React.FC = () => {
   }, [dispatch, account, history, urlParams.id]);
 
   useEffect(() => {
-    if (Object.keys(users).length === 0) {
-      dispatch(
-        fetchUsers(
-          (currentUsers: { [id: string]: UserProfile }) => {
-            if (!currentUsers[urlParams.id]) {
-              history.push('/');
-            }
-          },
-          () => {
+    dispatch(
+      fetchUsers(
+        (currentUsers: { [id: string]: UserProfile }) => {
+          if (!currentUsers[urlParams.id]) {
             history.push('/');
           }
-        )
-      );
-    }
+        },
+        () => {
+          history.push('/');
+        }
+      )
+    );
   }, [dispatch, history, urlParams.id]);
 
   if (!users[urlParams.id]) {
@@ -169,6 +169,32 @@ const ProfilePage: React.FC = () => {
       <Header as="h4">
         Last Update:{dateAndTimeStringFromSeconds(userInfo.lastUpdateTime)}
       </Header>
+      {process.env.REACT_APP_ENV === 'develop' && account?.id === urlParams.id && (
+        <Segment color="red" size="mini" style={{ marginBottom: '1em' }}>
+          <Header as="h5" color="red">DEBUG: lastUpdateTime を変更</Header>
+          <input
+            type="date"
+            value={debugLastUpdateTime}
+            onChange={(e) => setDebugLastUpdateTime(e.target.value)}
+            style={{ marginRight: '8px' }}
+          />
+          <Button
+            size="mini"
+            color="red"
+            content="適用"
+            disabled={!debugLastUpdateTime}
+            onClick={async () => {
+              const t = Math.floor(new Date(debugLastUpdateTime).getTime() / 1000);
+              await firebase.firestore()
+                .collection('users')
+                .doc(account.id)
+                .update({ lastUpdateTime: t });
+              setDebugLastUpdateTime('');
+              dispatch(fetchProfile(account.id));
+            }}
+          />
+        </Segment>
+      )}
       <ResponsiveContainer width="95%" height={300}>
         <ScatterChart
           margin={{

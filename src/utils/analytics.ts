@@ -10,10 +10,13 @@ declare global {
     }
 }
 
+const isDebug = process.env.NODE_ENV === 'development';
+
 export const sendPageView = (path: string) => {
     if (window.gtag) {
         window.gtag('config', trackID, {
             page_path: path,
+            ...(isDebug && { debug_mode: true }),
         });
     }
 };

@@ -32,17 +32,22 @@ const App: React.FC = () => {
   return (
     <div>
       <Helmet>
-        <script
-          async
-          src={`https://www.googletagmanager.com/gtag/js?id=${trackID}`}
-        ></script>
-        <script>
-          {`
+        {trackID && (
+          <script
+            async
+            src={`https://www.googletagmanager.com/gtag/js?id=${trackID}`}
+          ></script>
+        )}
+        {trackID && (
+          <script>
+            {`
               window.dataLayer = window.dataLayer || [];
               function gtag(){dataLayer.push(arguments);}
               gtag('js', new Date());
-                          `}
-        </script>
+              gtag('config', '${trackID}'${process.env.NODE_ENV === 'development' ? ", { 'debug_mode': true }" : ''});
+            `}
+          </script>
+        )}
       </Helmet>
       <Provider store={store}>
         <Router>
