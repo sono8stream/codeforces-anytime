@@ -134,18 +134,36 @@ export const calculateVirtualRank = async (data: {
     }
   }
 
-  // 5. 公式参加者の中で自分より上位の人数を数えてランクを算出
+  // 5. contest.ratingChanges で実際にレート対象だった参加者を取得
+  //    Educational Round 等で Div.1 が out-of-competition の場合、
+  //    standings には含まれるが ratingChanges には含まれない。
+  //    ratingChanges が存在する場合はそのハンドル集合を母集団とする。
+  const ratingChangesUrl = `https://codeforces.com/api/contest.ratingChanges?contestId=${contestID}`;
+  const ratingChangesRes = await fetch(ratingChangesUrl).catch(() => null);
+  let ratedHandles: Set<string> | null = null;
+  if (ratingChangesRes?.ok) {
+    const ratingChangesJson = await ratingChangesRes.json();
+    if (ratingChangesJson.status === 'OK' && ratingChangesJson.result.length > 0) {
+      ratedHandles = new Set(
+        (ratingChangesJson.result as { handle: string }[]).map((r) => r.handle)
+      );
+    }
+  }
+
+  // 6. 公式参加者の中で自分より上位の人数を数えてランクを算出
   let myRank = 1;
   for (const row of result.rows) {
     if (row.party.participantType !== 'CONTESTANT' || row.party.ghost) continue;
 
+    const handle = row.party.members[0]?.handle;
+    // ratedHandles が取得できている場合はレート対象者のみ比較
+    if (ratedHandles !== null && handle && !ratedHandles.has(handle)) continue;
+
     if (cfStyle) {
-      // CF 型: 合計スコアが高い人が上位（row.points は standings API が算出済み）
       if (row.points > myScore) {
         myRank++;
       }
     } else {
-      // ICPC 型: 正解数が多い、または同数でペナルティが少ない人が上位
       const theirSolved = row.problemResults.filter((p) => p.points > 0).length;
       if (
         theirSolved > mySolvedCount ||
