@@ -1,25 +1,18 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { Link, useHistory, useLocation } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { Button, Header, Icon, List, Loader, Segment } from 'semantic-ui-react';
 import { login } from '../actions';
 import firebase from '../firebase';
-import { useAccountInfo } from '../hooks';
+import { useAccountInfo, useLanguage } from '../hooks';
 
 const StartPage: React.FC = () => {
   const history = useHistory();
-  const queryParams = new URLSearchParams(useLocation().search);
 
   const dispatch = useDispatch();
   const account = useAccountInfo();
   const [onLoging, setOnLoging] = useState(false);
-  const [isEnglish, setIsEnglish] = useState(false);
-
-  useEffect(() => {
-    if (queryParams.get('lang')) {
-      setIsEnglish(queryParams.get('lang') === 'en');
-    }
-  }, []);
+  const [isEnglish, setIsEnglish] = useLanguage();
 
   const onGoogleLogin = useCallback(() => {
     dispatch(

@@ -27,6 +27,7 @@ import RatingColoredName from '../components/RatingColoredName';
 import {
   useAccountInfo,
   useIsUpdatingRating,
+  useLanguage,
   useProfile,
   useUsers,
 } from '../hooks';
@@ -53,15 +54,12 @@ const ProfilePage: React.FC = () => {
   const isUpdatingRating = useIsUpdatingRating();
 
   const [certIdx, setCertIdx] = useState(-1);
-  const [isEnglish, setIsEnglish] = useState(false);
+  const [isEnglish, setIsEnglish] = useLanguage();
   const [debugLastUpdateTime, setDebugLastUpdateTime] = useState('');
 
   useEffect(() => {
     if (queryParams.get('cert')) {
       setCertIdx(Number(queryParams.get('cert')));
-    }
-    if (queryParams.get('lang')) {
-      setIsEnglish(queryParams.get('lang') === 'en');
     }
   }, []);
 
