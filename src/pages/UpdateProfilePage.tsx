@@ -1,15 +1,14 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { Button, Dimmer, Form, Header, Loader, Modal } from 'semantic-ui-react';
 import { updateProfile } from '../actions';
 import { fetchRealRating } from '../api/fetchRealRating';
-import { useAccountInfo, useProfile } from '../hooks';
+import { useAccountInfo, useLanguage, useProfile } from '../hooks';
 import getRatingColorStyle from '../utils/getRatingColorStyle';
 
 const UpdateProfilePage: React.FC = () => {
   const history = useHistory();
-  const queryParams = new URLSearchParams(useLocation().search);
 
   const dispatch = useDispatch();
   const account = useAccountInfo();
@@ -20,13 +19,7 @@ const UpdateProfilePage: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [handleValidity, setHandleValidity] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
-  const [isEnglish, setIsEnglish] = useState(false);
-
-  useEffect(() => {
-    if (queryParams.get('lang')) {
-      setIsEnglish(queryParams.get('lang') === 'en');
-    }
-  }, []);
+  const [isEnglish, setIsEnglish] = useLanguage();
 
   const onButtonClick = useCallback(async () => {
     setIsLoading(true);
