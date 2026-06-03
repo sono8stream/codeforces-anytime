@@ -1,13 +1,16 @@
 import React from 'react';
 import { Header } from 'semantic-ui-react';
+import { useLanguage } from '../hooks';
 
 const Contact = () => {
+  const [isEnglish] = useLanguage();
+
   return (
     <>
       <Header
         as="h2"
         content="Contact Me"
-        subheader="ご意見お待ちしております"
+        subheader={isEnglish ? 'Feel free to reach out!' : 'ご意見お待ちしております'}
       />
       <Header textAlign="left" as="h3" content="E-mail" />
       <p>sono888.gamestudio＠gmail.com(＠→@)</p>
