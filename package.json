@@ -22,14 +22,14 @@
     "typescript-fsa-reducers": "^1.2.1"
   },
   "scripts": {
-    "start:develop": "cross-env REACT_APP_ENV=develop react-scripts start",
-    "start:production": "cross-env REACT_APP_ENV=production react-scripts start",
-    "build:develop": "cross-env REACT_APP_ENV=develop react-scripts build",
-    "build:production": "cross-env REACT_APP_ENV=production react-scripts build",
-    "deploy:develop": "cross-env REACT_APP_ENV=develop react-scripts build && firebase use develop &&firebase deploy --only hosting",
-    "deploy:production": "cross-env REACT_APP_ENV=production react-scripts build && firebase use production && firebase deploy --only hosting",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start:develop": "cross-env REACT_APP_ENV=develop node node_modules/react-scripts/bin/react-scripts.js start",
+    "start:production": "cross-env REACT_APP_ENV=production node node_modules/react-scripts/bin/react-scripts.js start",
+    "build:develop": "cross-env REACT_APP_ENV=develop node node_modules/react-scripts/bin/react-scripts.js build",
+    "build:production": "cross-env REACT_APP_ENV=production node node_modules/react-scripts/bin/react-scripts.js build",
+    "deploy:develop": "cross-env REACT_APP_ENV=develop node node_modules/react-scripts/bin/react-scripts.js build && firebase use develop &&firebase deploy --only hosting",
+    "deploy:production": "cross-env REACT_APP_ENV=production node node_modules/react-scripts/bin/react-scripts.js build && firebase use production && firebase deploy --only hosting",
+    "test": "node node_modules/react-scripts/bin/react-scripts.js test",
+    "eject": "node node_modules/react-scripts/bin/react-scripts.js eject"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -47,6 +47,9 @@
     ]
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^5.17.0",
+    "@testing-library/react": "^12.1.5",
+    "@testing-library/user-event": "^13.5.0",
     "@types/jest": "^25.2.3",
     "@types/node": "^13.13.12",
     "@types/react": "^16.9.41",
@@ -56,10 +59,12 @@
     "@types/react-router": "^5.1.8",
     "@types/react-router-dom": "^5.1.5",
     "@types/recharts": "^1.8.13",
+    "@types/redux-mock-store": "^1.5.0",
     "@types/redux-thunk": "^2.1.0",
     "@types/styled-components": "^5.1.7",
     "firebase-tools": "^13.16.0",
     "prettier": "^2.0.5",
+    "redux-mock-store": "^1.5.5",
     "tslint": "^6.1.2",
     "tslint-config-prettier": "^1.18.0",
     "tslint-plugin-prettier": "^2.3.0",
