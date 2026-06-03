@@ -6,7 +6,7 @@ export default test('Validate rating change', () => {
     handle: 'hoge',
     rank: 162,
     rating: 2394,
-  }).then((newRating) => {
-    expect(newRating).toBe(2415);
+  }).then(({ nextRating }) => {
+    expect(nextRating).toBe(2415);
   });
 });

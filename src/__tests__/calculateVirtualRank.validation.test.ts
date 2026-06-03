@@ -44,14 +44,21 @@ async function buildTestContext(
   contestID: number,
   startTime: number
 ): Promise<TestContext> {
-  const [standingsRes, submissionsRes] = await Promise.all([
+  const [standingsRes, submissionsRes, ratingChangesRes] = await Promise.all([
     (global as any).fetch(`https://codeforces.com/api/contest.standings?contestId=${contestID}`),
     (global as any).fetch(`https://codeforces.com/api/user.status?handle=${handle}&count=500`),
+    (global as any).fetch(`https://codeforces.com/api/contest.ratingChanges?contestId=${contestID}`),
   ]);
-  const [standingsJson, submissionsJson] = await Promise.all([
+  const [standingsJson, submissionsJson, ratingChangesJson] = await Promise.all([
     standingsRes.json(),
     submissionsRes.json(),
+    ratingChangesRes.json(),
   ]);
+
+  const ratedHandles: Set<string> | null =
+    ratingChangesJson.status === 'OK' && ratingChangesJson.result.length > 0
+      ? new Set((ratingChangesJson.result as { handle: string }[]).map((r) => r.handle))
+      : null;
 
   const isICPC = standingsJson.result.contest.type === 'ICPC';
   const durationSeconds: number = standingsJson.result.contest.durationSeconds;
@@ -83,9 +90,11 @@ async function buildTestContext(
   }
   const solvedCount = solvedMap.size;
 
-  const rows = (standingsJson.result.rows as any[]).filter(
-    (r: any) => r.party.participantType === 'CONTESTANT' && !r.party.ghost
-  );
+  const rows = (standingsJson.result.rows as any[]).filter((r: any) => {
+    if (r.party.participantType !== 'CONTESTANT' || r.party.ghost) return false;
+    if (ratedHandles !== null) return ratedHandles.has(r.party.members[0]?.handle);
+    return true;
+  });
   let strict = 0, sameOrBetter = 0;
   for (const row of rows) {
     if (isICPC) {
