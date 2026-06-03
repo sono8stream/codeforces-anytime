@@ -7,8 +7,9 @@
  *
  * 旧実装: contest.standings?showUnofficial=true でバーチャル参加者の行を直接取得しランク算出
  * 新実装: standings (official only) + user.status から独自計算
+ *         + contest.ratingChanges でレート対象者のみを母集団にフィルタ（fix #50）
  *
- * ■ 差異が生じる 2 つの原因
+ * ■ 差異が生じる原因
  *
  * 原因A: 旧実装のCF型スコア計算が「解いた問題数」による近似だった
  *   → Round 1073 (Div.2, CF型): 旧=641 / 新=518 (diff=-123)
@@ -19,15 +20,10 @@
  *   → コンテスト当日にバーチャル参加 → 旧レコード作成 → その後スタンディングが変化
  *   → 新実装は"現在の"スタンディングに基づく正確な値を返す
  *
- *   内訳:
- *     Round 1076 (Div.3, 2026-01-27 当日バーチャル): diff=-38
- *       → 旧レコード作成時はシステムテスト完了前。38名が後日不正解→除外された
- *     Edu 185 (2026-01-21): diff=-41
- *       → 同様に後日除外
- *     Edu 120 (2026-01-09): diff=+11
- *       → 後日システムテスト確定で11名が追加された
- *     Edu 128 (2026-01-06): diff=+10
- *       → 同様に後日追加
+ * 原因C: out-of-competition 参加者をランク計算から除外（fix #50）
+ *   → Educational Round / Div.3 では Div.1 参加者が out-of-competition として standings に含まれるが
+ *     ratingChanges には含まれない。旧実装はこれを含めてしまっていた。
+ *   → Edu 系は大幅にランクが下がる（母集団が大きく減るため）
  *
  * 実行: npm test -- --testPathPattern="yaayaRankRegression" --watchAll=false --runInBand
  * ※ CF API のレート制限のため --runInBand (シリアル実行) が必須
@@ -47,22 +43,24 @@ const CASES = [
   { contestID: 2191, startTime: 1768695300, oldRank: 641, expectedRank: 518,
     note: 'Round 1073 Div.2: 旧は解いた問題数近似 → 新はCFスコア式で正確' },
 
-  // ---- 差異あり: 原因B (スタンディングデータの変化) ----
-  { contestID: 2193, startTime: 1769508600, oldRank:  64, expectedRank:  26,
+  // ---- 差異あり: 原因B (スタンディングデータの変化) + 原因C (out-of-competition 除外) ----
+  { contestID: 2193, startTime: 1769508600, oldRank:  64, expectedRank:  25,
     note: 'Round 1076 Div.3: 当日バーチャル → システムテスト前のデータで旧レコード作成' },
-  { contestID: 2170, startTime: 1769002200, oldRank: 390, expectedRank: 349,
-    note: 'Edu 185: 後日除外参加者あり' },
-  { contestID: 1622, startTime: 1767960000, oldRank: 108, expectedRank: 119,
-    note: 'Edu 120: 後日確定参加者が追加' },
-  { contestID: 1680, startTime: 1767701400, oldRank:  87, expectedRank:  97,
-    note: 'Edu 128: 後日確定参加者が追加' },
+  { contestID: 2170, startTime: 1769002200, oldRank: 390, expectedRank: 239,
+    note: 'Edu 185: 後日除外参加者あり + Div.1 out-of-competition 除外' },
+  { contestID: 1622, startTime: 1767960000, oldRank: 108, expectedRank:  41,
+    note: 'Edu 120: 後日確定参加者が追加 + Div.1 out-of-competition 除外' },
+  { contestID: 1680, startTime: 1767701400, oldRank:  87, expectedRank:  43,
+    note: 'Edu 128: 後日確定参加者が追加 + Div.1 out-of-competition 除外' },
 
-  // ---- 差異なし: リグレッション確認 ----
-  { contestID: 1550, startTime: 1769430600, oldRank: 838, expectedRank: 838, note: 'Edu 111' },
+  // ---- Div.2 差異なし: リグレッション確認 ----
   { contestID: 1401, startTime: 1769081400, oldRank: 1022, expectedRank: 1022, note: 'Round 665 Div.2' },
   { contestID: 1422, startTime: 1768824000, oldRank: 122, expectedRank: 122, note: 'Round 675 Div.2' },
-  { contestID: 1569, startTime: 1768617000, oldRank: 302, expectedRank: 302, note: 'Edu 113' },
-  { contestID: 1574, startTime: 1768518300, oldRank: 135, expectedRank: 135, note: 'Edu 114' },
+
+  // ---- Educational: Div.1 out-of-competition 除外により変化 ----
+  { contestID: 1550, startTime: 1769430600, oldRank: 838, expectedRank: 628, note: 'Edu 111' },
+  { contestID: 1569, startTime: 1768617000, oldRank: 302, expectedRank: 164, note: 'Edu 113' },
+  { contestID: 1574, startTime: 1768518300, oldRank: 135, expectedRank:  62, note: 'Edu 114' },
 ];
 
 describe('yaaya 順位検証 (新実装の期待値で比較)', () => {
