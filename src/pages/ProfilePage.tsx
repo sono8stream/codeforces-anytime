@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
 import {
   CartesianGrid,
+  ReferenceArea,
   ResponsiveContainer,
   Scatter,
   ScatterChart,
@@ -56,6 +57,10 @@ const ProfilePage: React.FC = () => {
   const [certIdx, setCertIdx] = useState(-1);
   const [isEnglish, setIsEnglish] = useLanguage();
   const [debugLastUpdateTime, setDebugLastUpdateTime] = useState('');
+  const [refAreaLeft, setRefAreaLeft] = useState<number | undefined>(undefined);
+  const [refAreaRight, setRefAreaRight] = useState<number | undefined>(undefined);
+  const [zoomDomain, setZoomDomain] = useState<{ left: number; right: number } | null>(null);
+  const chartContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (queryParams.get('cert')) {
@@ -130,10 +135,68 @@ const ProfilePage: React.FC = () => {
     nameFromTime[record.startTime] = record.contestName;
   });
 
-  const xTick = calculateTimeTick(
-    data[0].time - 1000000,
-    data[data.length - 1].time + 1000000
-  );
+  const fullLeft  = data[0].time - 1000000;
+  const fullRight = data[data.length - 1].time + 1000000;
+  const visibleLeft  = zoomDomain?.left  ?? fullLeft;
+  const visibleRight = zoomDomain?.right ?? fullRight;
+  const xTick = calculateTimeTick(visibleLeft, visibleRight);
+  const isZoomed = zoomDomain !== null;
+
+  const ALL_Y_TICKS = [1200, 1400, 1600, 1900, 2100, 2400];
+  const visibleRatings = isZoomed
+    ? data.filter(d => d.time >= visibleLeft && d.time <= visibleRight).map(d => d.rating)
+    : [];
+  const yDomain: [number | string, number | string] = isZoomed && visibleRatings.length > 0
+    ? [Math.min(...visibleRatings) - 200, Math.max(...visibleRatings) + 200]
+    : ['dataMin-200', 'dataMax+200'];
+  const yTicks = isZoomed && visibleRatings.length > 0
+    ? ALL_Y_TICKS.filter(t => t >= (yDomain[0] as number) && t <= (yDomain[1] as number))
+    : ALL_Y_TICKS;
+
+  const CHART_MARGIN_LEFT = 10;
+  const CHART_MARGIN_RIGHT = 20;
+  const Y_AXIS_WIDTH = 60;
+
+  const pixelToTime = (clientX: number): number => {
+    const rect = chartContainerRef.current?.getBoundingClientRect();
+    if (!rect) return visibleLeft;
+    const plotLeft  = rect.left + CHART_MARGIN_LEFT + Y_AXIS_WIDTH;
+    const plotRight = rect.right - CHART_MARGIN_RIGHT;
+    const ratio = Math.max(0, Math.min(1, (clientX - plotLeft) / (plotRight - plotLeft)));
+    return visibleLeft + ratio * (visibleRight - visibleLeft);
+  };
+
+  const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    e.currentTarget.setPointerCapture(e.pointerId);
+    setRefAreaLeft(pixelToTime(e.clientX));
+  };
+  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (refAreaLeft !== undefined) setRefAreaRight(pixelToTime(e.clientX));
+  };
+  const handlePointerUp = () => {
+    if (refAreaLeft === undefined || refAreaRight === undefined || refAreaLeft === refAreaRight) {
+      setRefAreaLeft(undefined);
+      setRefAreaRight(undefined);
+      return;
+    }
+    const left  = Math.min(refAreaLeft, refAreaRight);
+    const right = Math.max(refAreaLeft, refAreaRight);
+    const minRange = (visibleRight - visibleLeft) * 0.02;
+    if (right - left < minRange) {
+      setRefAreaLeft(undefined);
+      setRefAreaRight(undefined);
+      return;
+    }
+    const margin = (right - left) * 0.05;
+    setZoomDomain({ left: left - margin, right: right + margin });
+    setRefAreaLeft(undefined);
+    setRefAreaRight(undefined);
+  };
+  const zoomOut = () => {
+    setZoomDomain(null);
+    setRefAreaLeft(undefined);
+    setRefAreaRight(undefined);
+  };
 
   return (
     <>
@@ -193,15 +256,25 @@ const ProfilePage: React.FC = () => {
           />
         </Segment>
       )}
+      <div style={{ marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+        {isZoomed && (
+          <Button size="small" onClick={zoomOut}>
+            {isEnglish ? 'Zoom Out' : '全期間に戻す'}
+          </Button>
+        )}
+        <span style={{ fontSize: '0.75em', color: '#999' }}>
+          {isEnglish ? 'You can drag to zoom' : 'ドラッグでズームできます'}
+        </span>
+      </div>
+      <div
+        ref={chartContainerRef}
+        style={{ touchAction: 'none', userSelect: 'none', cursor: refAreaLeft !== undefined ? 'crosshair' : 'default' }}
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
+      >
       <ResponsiveContainer width="95%" height={300}>
-        <ScatterChart
-          margin={{
-            top: 10,
-            right: 20,
-            bottom: 20,
-            left: 10,
-          }}
-        >
+        <ScatterChart margin={{ top: 10, right: 20, bottom: 20, left: 10 }}>
           <CartesianGrid
             strokeDasharray="3 3"
             horizontalFill={ratingColors}
@@ -212,16 +285,19 @@ const ProfilePage: React.FC = () => {
             type="number"
             dataKey="time"
             name="date"
-            domain={['dataMin - 1000000', 'dataMax + 1000000']}
+            allowDataOverflow
+            domain={[visibleLeft, visibleRight]}
             ticks={xTick}
             tickFormatter={(time) => monthStringFromTime(time)}
           />
           <YAxis
             type="number"
             dataKey="rating"
-            domain={['dataMin-200', 'dataMax + 200']}
-            ticks={[1200, 1400, 1600, 1900, 2100, 2400]}
+            allowDataOverflow
+            domain={yDomain}
+            ticks={yTicks}
             interval={0}
+            width={Y_AXIS_WIDTH}
           />
           <Tooltip
             cursor={{ strokeDasharray: '3 3' }}
@@ -246,8 +322,18 @@ const ProfilePage: React.FC = () => {
             }}
           />
           <Scatter name="A school" data={data} line={true} fill="white" />
+          {refAreaLeft !== undefined && refAreaRight !== undefined && (
+            <ReferenceArea
+              x1={Math.min(refAreaLeft, refAreaRight)}
+              x2={Math.max(refAreaLeft, refAreaRight)}
+              fill="#8884d8"
+              fillOpacity={0.2}
+              strokeOpacity={0.3}
+            />
+          )}
         </ScatterChart>
       </ResponsiveContainer>
+      </div>
       <Table unstackable={true} celled={true}>
         <Table.Header>
           <Table.Row>
