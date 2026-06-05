@@ -35,9 +35,7 @@ import UserProfile from '../types/userProfile';
 import { dateAndTimeStringFromSeconds } from '../utils/dateString';
 import { monthStringFromTime } from '../utils/dateString';
 import { getCertificate } from '../utils/getCertificate';
-import getRatingColorStyle, {
-  ratingColors,
-} from '../utils/getRatingColorStyle';
+import getRatingColorStyle from '../utils/getRatingColorStyle';
 import { getTwitterMessage } from '../utils/getTwitterMessage';
 import { calculateTimeTick } from '../utils/graphUtilities';
 
@@ -306,12 +304,27 @@ const ProfilePage: React.FC = () => {
       >
       <ResponsiveContainer width="95%" height={300}>
         <ScatterChart margin={{ top: 10, right: 20, bottom: 20, left: 10 }}>
-          <CartesianGrid
-            strokeDasharray="3 3"
-            horizontalFill={ratingColors}
-            fillOpacity={0.5}
-            stroke="black"
-          />
+          <CartesianGrid strokeDasharray="3 3" stroke="black" />
+          {/* レーティング帯を ReferenceArea で明示的に塗る（horizontalFill はズーム時に色ズレが起きるため非使用） */}
+          {[
+            { y1: 2400, y2: 9999, color: '#FF0000' },
+            { y1: 2100, y2: 2400, color: '#FF8C00' },
+            { y1: 1900, y2: 2100, color: '#AA00AA' },
+            { y1: 1600, y2: 1900, color: '#0000FF' },
+            { y1: 1400, y2: 1600, color: '#03A89E' },
+            { y1: 1200, y2: 1400, color: '#008000' },
+            { y1: 0,    y2: 1200, color: '#808080' },
+          ].map(band => (
+            <ReferenceArea
+              key={band.y1}
+              y1={band.y1}
+              y2={band.y2}
+              fill={band.color}
+              fillOpacity={0.5}
+              stroke="none"
+              ifOverflow="hidden"
+            />
+          ))}
           <XAxis
             type="number"
             dataKey="time"
