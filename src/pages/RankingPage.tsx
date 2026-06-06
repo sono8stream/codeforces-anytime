@@ -10,9 +10,8 @@ import {
   Table,
 } from 'semantic-ui-react';
 import { fetchUsers } from '../actions';
-import RatingColoredName from '../components/RatingColoredName';
+import { RatingColoredName, dateStringFromSeconds } from '../anytime-ui';
 import { useUsers } from '../hooks';
-import { dateStringFromSeconds } from '../utils/dateString';
 
 const RankingPage: React.FC = () => {
   const dispatch = useDispatch();
