@@ -23,7 +23,13 @@ import {
 } from 'semantic-ui-react';
 import { fetchProfile, fetchUsers, updateContestRecords } from '../actions';
 import firebase from '../firebase';
-import RatingColoredName from '../components/RatingColoredName';
+import {
+  RatingColoredName,
+  getRatingColorStyle,
+  dateAndTimeStringFromSeconds,
+  monthStringFromTime,
+  calculateTimeTick,
+} from '../anytime-ui';
 import {
   useAccountInfo,
   useIsUpdatingRating,
@@ -32,12 +38,8 @@ import {
   useUsers,
 } from '../hooks';
 import UserProfile from '../types/userProfile';
-import { dateAndTimeStringFromSeconds } from '../utils/dateString';
-import { monthStringFromTime } from '../utils/dateString';
 import { getCertificate } from '../utils/getCertificate';
-import getRatingColorStyle from '../utils/getRatingColorStyle';
 import { getTwitterMessage } from '../utils/getTwitterMessage';
-import { calculateTimeTick } from '../utils/graphUtilities';
 
 const ProfilePage: React.FC = () => {
   const history = useHistory();

@@ -1,0 +1,3 @@
+[submodule "src/anytime-ui"]
+	path = src/anytime-ui
+	url = https://github.com/sono8stream/anytime-ui.git
