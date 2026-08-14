@@ -12,6 +12,7 @@ import {
 import { fetchUsers } from '../actions';
 import { RatingColoredName, dateStringFromSeconds } from '../anytime-ui';
 import { useUsers } from '../hooks';
+import getRatingColorStyle from '../utils/getRatingColorStyle';
 
 const RankingPage: React.FC = () => {
   const dispatch = useDispatch();
@@ -204,6 +205,7 @@ const RankingPage: React.FC = () => {
                       <RatingColoredName
                         rating={user.rating}
                         name={user.handle}
+                        getRatingColorStyle={getRatingColorStyle}
                       />
                     </Link>
                   </Table.Cell>
